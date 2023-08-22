@@ -1,0 +1,58 @@
+{{ assign "hide_home" true }}
+{{#block "style" }}
+article {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body {
+  background: yellow;
+}
+.main {
+  margin: 0 auto;
+}
+.main h1 {
+  font-size: 3rem;
+  padding-bottom: 2rem;
+}
+.event-details {
+  font-size: 2rem;
+  height: 7rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.event-detail {
+  display: block;
+}
+.event-time {
+  background-color: #5accff;
+  padding-left: 2px;
+  padding-right: 5px;
+}
+.event-date {
+  background-color: #f9f;
+  padding: 2px 5px;
+}
+.main p {
+  margin-top: 2rem;
+}
+
+@media screen and (max-width: 600px) {
+  .event-details {
+    font-size: 1.5rem;
+    height: 5.5rem;
+  }
+}
+{{/block}}
+
+<div class="main">
+  <h1>Silent Disco</h1>
+  <div class="event-details">
+      <time class="event-detail" datetime="2023-09-03T23:00:00Z"><span class="event-time">7&ndash;9pm</span></time>
+      <span class="event-detail">Sunday, <span class="event-date">September 3, 2023</span></span>
+    </time>
+    <span class="event-detail">Claremont, NH 03743</span>
+  </div>
+  <p>All spots are <strong>full</strong></p>
+</div>
