@@ -92,8 +92,12 @@ mark {
     height: 5rem;
     margin-left: 2rem;
   }
+  article {
+    margin-left: 2rem;
+  }
   header h1 {
     height: 3rem;
+    margin-bottom: 1rem;
   }
   nav li {
     display: block;
