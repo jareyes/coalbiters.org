@@ -70,6 +70,10 @@ h2 {
   font-size: 1.5rem;
   padding: 2rem 0 1rem;
 }
+h3 {
+  font-weight: bold;
+  padding: 1rem 0 1rem;
+}
 p {
   color: rgb(77, 81, 86);
   line-height: 1.5rem;
@@ -83,6 +87,14 @@ mark {
   background: #f9f;
   padding: 0.25rem;
 }
+ul {
+  list-style: disc;
+}
+li {
+  line-height: 1.5rem;
+  margin-left: 1rem;
+}
+
 
 @media screen and (max-width: 600px) {
   header {
