@@ -21,6 +21,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  line-height: 2rem;
 }
 .event-detail {
   display: block;
@@ -38,6 +39,11 @@ body {
   margin-top: 2rem;
 }
 
+.main-event {
+  all: inherit;
+  cursor: pointer;
+}
+
 @media screen and (max-width: 600px) {
   .event-details {
     font-size: 1.5rem;
@@ -48,14 +54,14 @@ body {
   }
 }
 {{/block}}
-
 <div class="main">
-  <h1>Silent Disco</h1>
-  <div class="event-details">
-      <time class="event-detail" datetime="2023-09-03T23:00:00Z"><span class="event-time">7&ndash;9pm</span></time>
-      <span class="event-detail">Sunday, <span class="event-date">September 3, 2023</span></span>
-    </time>
-    <span class="event-detail">Claremont, NH 03743</span>
-  </div>
-  <p>All spots are <strong>full</strong></p>
+  <a class="main-event" href="/events#20231003-playdate">
+    <h1>Playdate</h1>
+    <div class="event-details">
+        <time class="event-detail" datetime="2023-10-03T22:00:00Z"><span class="event-time">6pm&ndash;8pm</span></time>
+        <span class="event-detail">Tuesday, <span class="event-date">October 3, 2023</span></span>
+      </time>
+      <span class="event-detail">Claremont Opera House</span>
+    </div>
+  </a>
 </div>
