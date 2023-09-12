@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mysql/xdevapi": "^8.0.33",
     "config": "^3.3.9",
     "express": "4.18.2",
     "express-bunyan-logger": "^1.3.3",
