@@ -1,5 +1,12 @@
 {
   app: {
     port: 4000
+  },
+  mysql: {
+    user: null,
+    password: null,
+    database: "coalbiters",
+    socketPath: "/var/run/mysqld/mysqld.sock",
+    timezone: "Z",
   }
 }

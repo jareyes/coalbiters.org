@@ -1,0 +1,3 @@
+CREATE USER IF NOT EXISTS 'www'@'localhost' IDENTIFIED BY RANDOM PASSWORD;
+CREATE DATABASE IF NOT EXISTS coalbiters;
+GRANT ALL ON coalbiters.* TO 'www'@'localhost';

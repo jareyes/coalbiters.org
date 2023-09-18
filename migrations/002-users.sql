@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS users (
+  user_id INT NOT NULL AUTO_INCREMENT,
+  date_joined TIMESTAMP DEFAULT	CURRENT_TIMESTAMP, 
+  email VARCHAR(256) NOT NULL,
+  is_confirmed BIT DEFAULT 0,
+  PRIMARY KEY (user_id),
+  UNIQUE KEY (email)
+);
