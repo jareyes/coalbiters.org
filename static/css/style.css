@@ -78,7 +78,6 @@ p {
   color: rgb(77, 81, 86);
   line-height: 1.5rem;
   padding: 0.5rem 0;
-  padding-right: 2rem;
 }
 em {
   font-style: italic;
@@ -106,6 +105,7 @@ li {
   }
   article {
     margin-left: 2rem;
+    margin-right: 2rem;
   }
   header h1 {
     height: 3rem;

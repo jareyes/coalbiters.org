@@ -4,6 +4,10 @@
 .cost {
   color: black;
 }
+.event-title {
+  text-decoration: none;
+  color: inherit;
+}
 .month {
   background: #f9f;
   color: black;
@@ -13,6 +17,13 @@
 .location {
   display: block;
   line-height: 1.5rem;
+}
+.signup {
+  background: yellow;
+  padding: 0.5rem;
+  text-decoration: none;
+  color: black;
+  margin: 1rem 0;
 }
 .sold-out {
   color: rgb(77, 81, 86);
@@ -25,7 +36,11 @@
 
 <h2 id="2023-09"><a href="#2023-09" class="month">September 2023</a></h2>
 
-<h2 id="20231003-playdate">Playdate</h2>
+<h2 id="20231003-playdate">
+  <a class="event-title" href="/events/2023-10-03-playdate">
+    Playdate: <em>Almost, Maine</em>
+  </a>
+</h2>
 <time datetime="2023-10-03T22:00:00Z">Tuesday, Oct. 3 6&ndash;8pm</time>
 <a href="https://goo.gl/maps/ogR2jWQBGRZ3TKGcA" target="_blank">
   <span class="location">Claremont Opera House, Claremont, NH</span>
@@ -36,6 +51,7 @@
 <p>
   No acting experience required. Water and light snacks provided.
 </p>
+<p><a class="signup" href="/events/2023-10-03-playdate">Signup Now</a></p>
 
 <h2 id="20230903-slient-disco">Silent Disco #1<span class="sold-out">(Sold out)</span></h2>
 <time datetime="2023-09-03T23:00:00Z">Sunday, Sep 3. 7&ndash;9pm</time>

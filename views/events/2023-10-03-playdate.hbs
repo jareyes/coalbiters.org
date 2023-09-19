@@ -1,0 +1,99 @@
+{{ assign "title" "Playdate: Almost, Maine" }}
+
+{{#block "style"}}
+label {
+  font-weight: bold;
+  margin-right: 0.25rem;
+}
+input[type="email"] {
+  appearance: none;
+  background: white;
+  border: 2px solid #999;
+  font-size: 100%;
+}
+time {
+  font-weight: bold;
+}
+#signup-form {
+  margin: 1rem 0;
+}
+.cost {
+ color: black;
+ font-weight: bold;
+}
+.location {
+  display: block;
+  line-height: 1.5rem;
+}
+.registration {
+  background: #fafafa;
+  border: solid #f9f;
+  padding-left: 1rem;
+}
+.registration-button {
+  appearance: none;
+  background: #ddd;
+  border: 2px solid #999;
+  font-size: 100%;
+  margin-top: 1rem;
+  padding: 0.35rem;
+}
+{{/block}}
+
+
+<h1>Playdate: <em>Almost, Maine</em></h1>
+
+<p>
+  Pull up a seat in our circle of chairs. Grab a silly hat or scarf from our coat tree and open up the script. We'll take turns reading lines from plays on stage.
+</p>
+
+<div class="registration">
+  <h2>Signup Now</h2>
+   <time datetime="2023-10-03T22:00:00Z">Tuesday, Oct. 3 6&ndash;8pm.</time>
+   <a href="https://goo.gl/maps/ogR2jWQBGRZ3TKGcA" target="_blank">
+    <span class="location">Claremont Opera House, Claremont, NH</span>
+  </a>
+  <p>Cost: <span class="cost">Free</span></p>
+  <p>Only a few spots left!</p>
+
+  <form id="signup-form" method="post" action="/events/signup">
+    <label for="email">Email</label>
+    <input type="email" name="email" required placeholder="Your email">
+
+    <button class="g-recaptcha registration-button"
+            data-sitekey="6LdusTUoAAAAAIdIa-fLUR4UgH19nuvqWLUBxYie" 
+            data-callback="onSubmit" 
+            data-action="submit">Signup</button>
+  </form>
+</div>
+
+
+<h2>Synposis</h2>
+
+<p>From <cite><a href="https://www.almostmaine.com/about-the-play" target="_blank">the official play website</a></cite>:</p>
+
+<blockquote>
+  <p>
+  Welcome to Almost, Maine, a town that’s so far north, it’s almost not in the United States&mdash;it’s almost in Canada. And it almost doesn’t exist. Because its residents never got around to getting organized. So it’s just&hellip;Almost.
+  </p>
+
+  <p>
+  One cold, clear Friday night in the middle of winter, while the northern lights hover in the sky above, Almost’s residents find themselves falling in and out of love in the strangest ways. Knees are bruised. Hearts are broken. Love is lost, found, and confounded. And life for the people of Almost, Maine will never be the same.
+  </p>
+
+  <p>
+  ALMOST, MAINE: It’s love. But not quite. 
+  </p>
+</blockquote>
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+function onSubmit(token) {
+  const form = document.getElementById("signup-form");
+  const is_valid = form.reportValidity();
+  if(is_valid) {
+    form.submit();
+  }
+}
+</script>
+
