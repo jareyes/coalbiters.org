@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS events (
+  event_id INT NOT NULL AUTO_INCREMENT,
+  event_date TIMESTAMP NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  slug VARCHAR(255) NOT NULL,
+  PRIMARY KEY (event_id),
+  UNIQUE KEY (slug)
+);

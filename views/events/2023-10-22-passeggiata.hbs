@@ -1,0 +1,85 @@
+{{ assign "title" "Passeggiata" }}
+
+{{#block "style"}}
+label {
+  font-weight: bold;
+  margin-right: 0.25rem;
+}
+input[type="email"] {
+  appearance: none;
+  background: white;
+  border: 2px solid #999;
+  font-size: 100%;
+}
+time {
+  font-weight: bold;
+}
+#signup-form {
+  margin: 1rem 0;
+}
+.cost {
+ color: black;
+ font-weight: bold;
+}
+.location {
+  display: block;
+  line-height: 1.5rem;
+}
+.registration {
+  background: #fafafa;
+  border: solid #f9f;
+  padding-left: 1rem;
+}
+.registration-button {
+  appearance: none;
+  background: #ddd;
+  border: 2px solid #999;
+  font-size: 100%;
+  margin-top: 1rem;
+  padding: 0.35rem;
+}
+{{/block}}
+
+
+<h1>Passeggiata: A Stroll</h1>
+
+<p>
+  Dress in your Sunday best and amble leisurely with your Coalbiter friends
+  around the downtown. Coffee, tea, and cake served following the promenade.
+</p>
+
+<p>
+  Sunglasses not required but strongly encouraged.
+</p>
+
+<div class="registration">
+  <h2>Signup Now</h2>
+  <time datetime="2023-10-22T15:00:00Z">Sunday, Oct. 22 11am&ndash;12 noon</time>
+  <span class="location">Opera House Square, Claremont, NH</span>
+
+
+  <p>Cost: <span class="cost">Free</span></p>
+
+  <form id="signup-form" method="post" action="/events/signup">
+    <label for="email">Email</label>
+    <input type="email" name="email" required placeholder="Your email">
+    <input type="hidden" name="event_id" value="2">
+
+    <button class="g-recaptcha registration-button"
+            data-sitekey="6LdusTUoAAAAAIdIa-fLUR4UgH19nuvqWLUBxYie" 
+            data-callback="onSubmit" 
+            data-action="submit">Signup</button>
+  </form>
+</div>
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+<script>
+function onSubmit(token) {
+  const form = document.getElementById("signup-form");
+  const is_valid = form.reportValidity();
+  if(is_valid) {
+    form.submit();
+  }
+}
+</script>
+
