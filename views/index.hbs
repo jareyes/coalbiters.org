@@ -45,6 +45,23 @@ body {
   cursor: pointer;
 }
 
+.sign-up-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+}
+
+.email-input {
+  flex-grow: 1;
+  padding-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.signup-button {
+  background: #e9e9ed;
+}
+
 @media screen and (max-width: 600px) {
   .event-details {
     font-size: 1.5rem;
@@ -64,5 +81,10 @@ body {
     <span class="event-detail">Claremont Opera House</span>
   </div>
   </a>
-  <p><a href="/events/2023-11-14-playdate">Sign up</a> now!</p>
+  <p>
+    <form class="sign-up-form">
+      <input class="email-input" type="email" placeholder="coalbiter@example.com">
+      <input class="signup-button" type="submit" value="Sign Up">
+    </form>
+  </p>
 </div>
