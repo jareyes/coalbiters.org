@@ -2,6 +2,7 @@
 {{#block "style" }}
 article {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -50,12 +51,19 @@ body {
   flex-direction: row;
   align-items: center;
   justify-content: start;
+  margin-top: 5rem;
+  margin-bottom: 1rem;
+}
+.email-label {
+  display: none;
 }
 
 .email-input {
   flex-grow: 1;
-  padding-left: 0.5rem;
   margin-right: 0.5rem;
+  background: yellow;
+  border: none;
+  border-bottom: 2px solid #000;
 }
 
 .signup-button {
@@ -81,10 +89,11 @@ body {
     <span class="event-detail">Claremont Opera House</span>
   </div>
   </a>
-  <p>
-    <form class="sign-up-form">
-      <input class="email-input" type="email" placeholder="coalbiter@example.com">
-      <input class="signup-button" type="submit" value="Sign Up">
-    </form>
-  </p>
+  <form class="sign-up-form" method="post" action="/events/signup">
+    <label class="email-label" for="email">Email</label>
+    <input class="email-input" name="email" required type="email" placeholder="coalbiter@example.com">
+    <input type="hidden" name="event_id" value="3">
+
+    <input class="signup-button" type="submit" value="Sign Up">
+  </form>
 </div>
