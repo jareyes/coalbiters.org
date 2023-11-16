@@ -4,11 +4,11 @@ PRODID:-//coalbiters.org//ical//EN
 BEGIN:VEVENT
 UID:{{ calendar_uuid }}
 SEQUENCE:0
-DTSTAMP:{{ ical_format modtime }}
-DTSTART:{{ ical_format start_datetime }}
-DTEND:{{ ical_format end_datetime }}
-SUMMARY:{{ title }}
-LOCATION:{{ location }}
+DTSTAMP:{{ ical_date modtime }}
+DTSTART:{{ ical_date start_datetime }}
+DTEND:{{ ical_date end_datetime }}
+SUMMARY:Claremont Coalbiters {{ title }}
+LOCATION:{{ location_address }}
 DESCRIPTION:{{ calendar_desciption }}
 URL;VALUE=URI:https://coalbiters.com/events/{{ slug }}
 END:VEVENT

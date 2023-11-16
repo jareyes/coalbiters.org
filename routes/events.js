@@ -1,9 +1,10 @@
 const Event = require("../lib/event");
 const Reservation = require("../lib/reservation");
+const helpers = require("../lib/helpers");
 const {Router} = require("express");
 const User = require("../lib/user");
 
-async function signup(req, res, next) {
+async function event_registration(req, res, next) {
   try {
     const form = req.body;
     const email = form.email;
@@ -19,7 +20,7 @@ async function signup(req, res, next) {
     await reservation.save();
 
     const event = await Event.get_by_id(event_id);
-    res.redirect(`signup/${event.slug}`);
+    res.redirect(`${event.slug}/confirmed`);
   }
   catch(err) {
     next(err);
@@ -31,15 +32,49 @@ function signup_success(req, res) {
   res.render(`events/success-${slug}`);
 }
 
-async function ical_event(req, res) {
+async function event_ics(req, res, next) {
   try {
     const slug = req.params.slug;
     const event = await Event.get_by_slug(slug);
-
-    console.log("event", event);
+    // Computed property, add it to locals
+    const end_datetime = event.end_datetime;
+    const locals = {end_datetime, layout: null, ...event};
 
     res.header("Content-Type", "text/calendar");
-    res.render("event-ical", {...event, layout: null});
+    res.render("event-ical", locals);
+  }
+  catch(err) {
+    next(err);
+  }
+}
+
+async function event_detail(req, res, next) {
+  try {
+    const slug = req.params.slug;
+    const event = await Event.get_by_slug(slug);
+    const event_daterange = helpers.display_daterange(
+      event.start_datetime,
+      event.duration_m,
+    );
+    const registration_open = (Date.now() < event.start_datetime.getTime());
+    const locals = {...event, event_daterange, registration_open};
+    res.render("event-detail", locals);
+  }
+  catch(err) {
+    next(err);
+  }
+}
+
+async function event_confirmation(req, res, next) {
+  try {
+    const slug = req.params.slug;
+    const event = await Event.get_by_slug(slug);
+    const locals = {
+      ...event,
+      title: "Signup Confirmation",
+      event_title: event.title,
+    };
+    res.render("event-confirmation", locals);
   }
   catch(err) {
     next(err);
@@ -48,14 +83,9 @@ async function ical_event(req, res) {
 
 const router = new Router();
 router.get("/", (req, res) => res.render("events"));
-
-router.get("/:slug", (req, res) => {
-  const slug = req.params.slug;
-  res.render(`events/${slug}`);
-});
-router.get("/:slug/invite.ics", ical_event);
-
-router.post("/signup", signup);
-router.get("/signup/:slug", signup_success);
+router.post("/signup", event_registration);
+router.get("/:slug", event_detail);
+router.get("/:slug/confirmed", event_confirmation);
+router.get("/:slug/invite.ics", event_ics);
 
 module.exports = router;
