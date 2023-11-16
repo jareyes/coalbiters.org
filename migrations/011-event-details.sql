@@ -1,7 +1,7 @@
 UPDATE events SET start_datetime=event_date;
 
 UPDATE events SET
-  calendar_desciption="Use the entrace by the police station. Take the elevator to the fifth floor, and join us on the stage.
+  calendar_description="Use the entrace by the police station. Take the elevator to the fifth floor, and join us on the stage.
 
   Light beverages, snacks, and scripts provided.",
   calendar_uuid="5196c1e7-b819-4939-a6ec-72cd8c51693c",
@@ -31,7 +31,7 @@ UPDATE events SET
   WHERE event_id=1;
 
 UPDATE events SET
-  calendar_desciption="We'll meet at Violet's Book Exchange and do a lap around Opera House Square, down Pleasant Street and back to the book store for refreshments and chats.
+  calendar_description="We'll meet at Violet's Book Exchange and do a lap around Opera House Square, down Pleasant Street and back to the book store for refreshments and chats.
 
   Start with a stroll. End with some coffe and cake.",
   calendar_uuid="8593ac8c-c3b5-4567-b5b0-79677686ba90",
@@ -45,7 +45,7 @@ UPDATE events SET
   WHERE event_id=2;
 
 UPDATE events SET
-  calendar_desciption="Use the entrace by the police station. Take the elevator to the fifth floor, and join us on the stage.
+  calendar_description="Use the entrace by the police station. Take the elevator to the fifth floor, and join us on the stage.
 
   Light beverages, snacks, and scripts provided.",
   calendar_uuid="73e2140d-c3d7-4e0e-acb4-dcfe44542882",
@@ -77,7 +77,7 @@ UPDATE events SET
   WHERE event_id=3;
 
 UPDATE events SET
-  calendar_desciption="Use the entrace by the police station. Take the elevator to the fifth floor, and join us on the stage.
+  calendar_description="Use the entrace by the police station. Take the elevator to the fifth floor, and join us on the stage.
 
   Light beverages, snacks, and scripts provided.",
   calendar_uuid="116e7484-e27b-4bcd-a5e9-c9dc25398cb6",
