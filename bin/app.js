@@ -6,21 +6,15 @@ const config = require("config");
 const database = require("../lib/database");
 const express = require("express");
 const events = require("../routes/events");
-const {create: hbs} = require("express-handlebars");
-const helpers = require("../lib/helpers");
 const path = require("node:path");
+const template = require("../lib/template");
 
-const HBS = hbs({
-  extname: "hbs",
-  defaultLayout: "base",
-  helpers,
-});
 const PORT = config.get("app.port");
 
 const app = express();
 
-// Templating
-app.engine("hbs", HBS.engine);
+// Templates
+app.engine("hbs", template.engine);
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "..", "views/"));
 
