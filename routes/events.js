@@ -3,33 +3,7 @@ const Event = require("../lib/event");
 const Reservation = require("../lib/reservation");
 const helpers = require("../lib/helpers");
 const {Router} = require("express");
-const template = require("../lib/template");
 const User = require("../lib/user");
-
-async function send_confirmation(email_address, event) {
-  try {
-    const subject = `You're signed up for ${event.title}`;
-    const locals = {...event, end_datetime: event.end_datetime, layout: null};
-    const html = await template.render("event-confirmation-email", locals);
-    const text = await template.render("event-confirmation-email-text", locals);
-    const event_ics = await template.render("event-ical", locals);
-    await email.send(
-      email_address,
-      subject,
-      html,
-      text,
-      event_ics
-    );
-    console.log(JSON.stringify({event: "Events.SEND_CONFIRMATION", email: email_address, event_slug: event.slug}));
-  }
-  // This function must never error. We send email
-  // in the background and do not blow up the web
-  // if it fails
-  catch(err) {
-    // TODO: Do something better
-    console.error(err);
-  }
-}
 
 async function event_registration(req, res, next) {
   try {
@@ -50,7 +24,7 @@ async function event_registration(req, res, next) {
     res.redirect(`${event.slug}/confirmed`);
 
     // Send confirmation email in background
-    send_confirmation(email, event);
+    email.send_confirmation(email, event);
   }
   catch(err) {
     next(err);
@@ -117,5 +91,7 @@ router.post("/signup", event_registration);
 router.get("/:slug", event_detail);
 router.get("/:slug/confirmed", event_confirmation);
 router.get("/:slug/invite.ics", event_ics);
+
+router.send_confirmation = send_confirmation;
 
 module.exports = router;
