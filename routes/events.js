@@ -3,6 +3,7 @@ const Event = require("../lib/event");
 const Reservation = require("../lib/reservation");
 const helpers = require("../lib/helpers");
 const {Router} = require("express");
+const template = require("../lib/template");
 const User = require("../lib/user");
 
 async function event_registration(req, res, next) {
