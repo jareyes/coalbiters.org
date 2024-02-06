@@ -7,6 +7,7 @@ const database = require("../lib/database");
 const express = require("express");
 const events = require("../routes/events");
 const path = require("node:path");
+const ticket = require("../lib/tickets");
 const template = require("../lib/template");
 
 const PORT = config.get("app.port");
@@ -25,6 +26,7 @@ app.use(body_parser.urlencoded({extended: false}));
 
 app.get("/", (req, res) => res.render("index"));
 app.use("/events", events);
+app.use("/ticket", tickets);
 app.get("/about", (req, res) => res.render("about"));
 
 if(require.main === module) {
