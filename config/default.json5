@@ -9,20 +9,23 @@
     socketPath: "/var/run/mysqld/mysqld.sock",
     timezone: "Z",
   },
-  nodemailer: {
-    host: "127.0.0.1",
-    port: 1025,
-    // We're sending to local ProtonMail Bridge.
-    // Not sending the mail ourselves on 465, so it's not
-    // secure. But also not going over the wire.
-    secure: false,
-    auth: {
-      user: null,
-      pass: null,
+  email: {
+    nodemailer: {
+      host: "127.0.0.1",
+      port: 1025,
+      // We're sending to local ProtonMail Bridge.
+      // Not sending the mail ourselves on 465, so it's not
+      // secure. But also not going over the wire.
+      secure: false,
+      auth: {
+        user: null,
+        pass: null,
+      },
+      tls: {
+        // ProtonMail Bridge local client uses a self-signed cert
+        rejectUnauthorized: false,
+      },
     },
-    tls: {
-      // ProtonMail Bridge local client uses a self-signed cert
-      rejectUnauthorized: false,
-    },
+    unsubscribe_salt: null,
   },
 }
