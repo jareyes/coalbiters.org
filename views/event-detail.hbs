@@ -52,7 +52,7 @@ time {
    <a href="{{ location_url }}" target="_blank">
     <span class="location">{{ location_display }}</span>
   </a>
-  <p>Cost: <span class="cost">Free</span></p>
+  <p>Cost: <span class="cost">{{ usd_amount price }}</span></p>
 
   <form id="signup-form" method="post" action="/events/signup">
     <label for="email">Email</label>

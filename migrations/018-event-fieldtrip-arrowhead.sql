@@ -1,4 +1,4 @@
-INSERT INTO events (event_id, event_date, title, slug, start_datetime, calendar_description, calendar_uuid, duration_m, location_url, summary, details, location_display, location_address)
+INSERT INTO events (event_id, event_date, title, slug, start_datetime, calendar_description, calendar_uuid, duration_m, location_url, summary, details, location_display, location_address, price)
 VALUES (
   7,
   "2024-02-23 23:00:00",
@@ -16,14 +16,13 @@ VALUES (
   <p>
     Arrowhead Recreation Area is a volunteer run, one-stop shop for outdoor activities in Claremont, NH. During the winter they offer affordable skiing, snowboarding, and snow tubing&mdash;weather permitting.
   </p>
-
   <p>
-    Free parking at the facility. Tickets are $12 per person, including small children. The cost of admission gets you unlimited tubing all night long. And they'll even tow you up to the top of the hill. Food and beverage concessions are available in the cabin.
+    Free parking at the facility. Tickets can be purchased in-person or ahead of time <a href=\"http://arrowheadnh.com/index.php\" target=\"_blank\">online</a>. Each tuber, including small children, requires their own separate ticket. The cost of admission gets you unlimited tubing all night long. And they'll even tow you up to the top of the hill. Food and beverage concessions are available in the cabin.
   </p>
-
   <p>
     We'll start at the beginning of the night to get as much tubing in as possible. But you're welcome to come anytime!
   </p>",
   "Arrowhead Recreation Area, Claremont, NH",
-  "Arrowhead Recreation Area, 18 Robert Easter Way, Claremont, NH 03743"
+  "Arrowhead Recreation Area, 18 Robert Easter Way, Claremont, NH 03743",
+  "12.00"
 );

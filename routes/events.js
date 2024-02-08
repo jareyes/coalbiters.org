@@ -93,6 +93,4 @@ router.get("/:slug", event_detail);
 router.get("/:slug/confirmed", event_confirmation);
 router.get("/:slug/invite.ics", event_ics);
 
-router.send_confirmation = send_confirmation;
-
 module.exports = router;
