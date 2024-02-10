@@ -6,7 +6,8 @@ const router = new Router();
 
 router.get("/", (req, res) => res.render("index"));
 router.get("/about", (req, res) => res.render("about"));
+router.get("/events", (req, res) => res.render("events"));
 router.use("/email", email);
-router.use("/events", events);
+router.use("/event", events);
 
 module.exports = router;

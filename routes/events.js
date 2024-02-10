@@ -31,11 +31,6 @@ async function event_registration(req, res, next) {
   }
 }
 
-function signup_success(req, res) {
-  const slug = req.params.slug;
-  res.render(`events/success-${slug}`);
-}
-
 async function event_ics(req, res, next) {
   try {
     const slug = req.params.slug;
@@ -45,7 +40,7 @@ async function event_ics(req, res, next) {
     const locals = {end_datetime, layout: null, ...event};
 
     res.header("Content-Type", "text/calendar");
-    res.render("event-ical", locals);
+    res.render("emails/event-ical", locals);
   }
   catch(err) {
     next(err);
@@ -56,7 +51,7 @@ async function event_detail(req, res, next) {
   try {
     const slug = req.params.slug;
     const event = await Event.get_by_slug(slug);
-    res.render("event-detail", event.to_pojo());
+    res.render("events/event-detail", event.to_pojo());
   }
   catch(err) {
     next(err);
@@ -72,7 +67,7 @@ async function event_confirmation(req, res, next) {
       title: "Signup Confirmation",
       event_title: event.title,
     };
-    res.render("event-confirmation", locals);
+    res.render("events/event-confirmation", locals);
   }
   catch(err) {
     next(err);
@@ -80,7 +75,6 @@ async function event_confirmation(req, res, next) {
 }
 
 const router = new Router();
-router.get("/", (req, res) => res.render("events"));
 router.post("/signup", event_registration);
 router.get("/:slug", event_detail);
 router.get("/:slug/confirmed", event_confirmation);
