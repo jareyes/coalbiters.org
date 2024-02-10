@@ -1,10 +1,9 @@
 const email = require("../lib/email");
-const Event = require("../lib/event");
-const Reservation = require("../lib/reservation");
-const helpers = require("../lib/helpers");
+const Event = require("../lib/model/event");
+const Reservation = require("../lib/model/reservation");
 const {Router} = require("express");
 const template = require("../lib/template");
-const User = require("../lib/user");
+const User = require("../lib/model/user");
 
 async function event_registration(req, res, next) {
   try {
@@ -57,13 +56,7 @@ async function event_detail(req, res, next) {
   try {
     const slug = req.params.slug;
     const event = await Event.get_by_slug(slug);
-    const event_daterange = helpers.display_daterange(
-      event.start_datetime,
-      event.duration_m,
-    );
-    const registration_open = (Date.now() < event.start_datetime.getTime());
-    const locals = {...event, event_daterange, registration_open};
-    res.render("event-detail", locals);
+    res.render("event-detail", event.to_pojo());
   }
   catch(err) {
     next(err);

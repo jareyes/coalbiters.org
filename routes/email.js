@@ -1,8 +1,8 @@
 const email = require("../lib/email");
 const {Router} = require("express");
-const User = require("../lib/user");
+const User = require("../lib/model/user");
 
-function unsubscribe(req, res, next) {
+async function unsubscribe(req, res, next) {
   try {
     const {email, token} = req.query;
     if(!email.validate_unsubscribe_token(email, token)) {
@@ -20,3 +20,7 @@ function unsubscribe(req, res, next) {
 }
 
 const router = new Router();
+
+router.get("unsubscribe", unsubscribe);
+
+module.exports = router;

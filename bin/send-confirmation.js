@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const database = require("../lib/database");
 const email = require("../lib/email");
-const Event = require("../lib/event");
+const Event = require("../lib/model/event");
 const process = require("node:process");
 
 async function get_emails(event) {
