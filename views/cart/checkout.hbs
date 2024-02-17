@@ -10,7 +10,9 @@ const stripe = Stripe("{{stripe_public_key}}");
 initialize();
 
 async function initialize() {
-  const response = await fetch("/cart/session", {method: "POST"});
+  const formData = new FormData();
+  formData.append("event_id", "{{ event_id}}");
+  const response = await fetch("/cart/session", {method: "POST", body: formData});
   const {clientSecret} = await response.json();
   const checkout = await stripe.initEmbeddedCheckout({clientSecret});
   checkout.mount("#checkout");

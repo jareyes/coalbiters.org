@@ -1,11 +1,78 @@
 {{#block "style"}}
-.venue, .venue-address, .event-date, .event-time {
-  display:block;
+.event-datetime {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.event-time {
+  background: #5accff;
+  padding: 0.25rem;
+}
+.event-date mark {
+  background: #f9f;
+}
+.event-venue {
+  margin-top: 1.25rem;
+  font-size: 1.1rem;
+  line-height: 1.75rem;
+}
+.event-venue a {
+  color: #333;
+  text-decoration: underline;
+  display: block;
+}
+.event-venue a:hover {
+  color: #4092b7;
+}
+.venue-name, .venue-address {
+  display: block;
+}
+.venue-name {
+  font-weight: bold;
+}
+.checkout-button {
+  width: 100%;
+  background: #000;
+  color: #fff;
+  display: block;
+  text-align: center;
+  padding: 1rem 0;
+  font-weight: bold;
+  margin-top: 2rem;
+  border: none;
+  height: 3.1rem;
+	cursor: pointer;
+  font-size: 1.1rem;
+}
+.cost {
+  margin-top: 1.5rem;
+  display: block;
+  font-size: 1.1rem;
+}
+h2 {
+  padding-bottom: 0;
 }
 {{/block}}
 
-<h1>{{title}}</h1>
-<span class="venue">Arrowhead Recretaion Area</span>
-<span class="venue-adddress">47 Edgar Price Road, Claremont, NH 03743</span>
-<span class="event-date">March 1, 2024</span>
-<span class="event-time">7&ndash;10pm</span>
+<h1>Silent Disco</h1>
+<div class="event-datetime">
+  <span class="event-date">Saturday <mark>March 1, 2024</mark></span>
+  from
+  <span class="event-time">7&ndash;10pm</span>
+</div>
+<form method="post" action="/cart/checkout">
+  <input type="hidden" name="event_id" value="6">
+  <input type="submit" class="checkout-button" value="Buy Tickets">
+</form>
+
+<div class="event-venue">
+  <span class="venue-name">Arrowhead Recreation Area</span>
+  <span class="venue-adddress">47 Edgar Price Road, Claremont, NH 03743</span>
+  <a href="#s">Open map</a>
+</div>
+<span class="cost">Cost: $15 per ticket</span>
+
+<h2>The Deets</h2>
+<p>
+  Come dance the night away. We'll be jamming to three channel of music from start to end. Invite your friends and let loose at the only regular disco in the Upper Valley.
+</p>
+<p>Cost of attendance includes one headset rental for the entire night.</p>

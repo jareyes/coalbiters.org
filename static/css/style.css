@@ -75,9 +75,9 @@ h3 {
   padding: 1rem 0 1rem;
 }
 p {
-  color: rgb(77, 81, 86);
+  color: #333;
   line-height: 1.5rem;
-  padding: 0.5rem 0;
+  padding-top: 1.5rem;
 }
 em {
   font-style: italic;

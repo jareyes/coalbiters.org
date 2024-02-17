@@ -1,5 +1,6 @@
 const body_parser = require("body-parser");
 const config = require("config");
+const Event = require("../lib/model/event");
 const {Router} = require("express");
 const Stripe = require("stripe");
 
@@ -11,7 +12,14 @@ const stripe = Stripe(STRIPE_API_KEY);
 
 function get_return_url() {
   const {protocol, host} = ROUTES;
-  return `${protocol}//${host}${MOUNT}/success`;
+  return `${protocol}://${host}${MOUNT}/success`;
+}
+
+async function checkout(req, res, next) {
+  const form = req.body;
+  const event_id = form.event_id;
+  const locals = {event_id, stripe_public_key: STRIPE_PUBLIC_KEY};
+  res.render("cart/checkout", locals);
 }
 
 async function create_session(req, res, next) {
@@ -80,7 +88,7 @@ async function events_webhook(req, res) {
 const router = new Router();
 router.post("/session", create_session);
 router.post("/hook", body_parser.json(), events_webhook);
-router.get("/checkout", (req, res) => res.render("cart/checkout", {stripe_public_key: STRIPE_PUBLIC_KEY}));
+router.post("/checkout", checkout);
 router.get("/success", (req, res) => res.render("cart/success", {layout: null}));
 
 router.MOUNT = MOUNT;

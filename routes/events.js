@@ -1,11 +1,11 @@
 const config = require("config");
 const email = require("../lib/email");
-const Event = require("../lib/event");
-const Reservation = require("../lib/reservation");
+const Event = require("../lib/model/event");
+const Reservation = require("../lib/model/reservation");
 const helpers = require("../lib/helpers");
 const {Router} = require("express");
 const template = require("../lib/template");
-const User = require("../lib/user");
+const User = require("../lib/model/user");
 
 const MOUNT = config.get("routes.mount.events");
 
