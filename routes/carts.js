@@ -3,11 +3,10 @@ const config = require("config");
 const {Router} = require("express");
 const Stripe = require("stripe");
 
+const MOUNT = config.get("routes.mount.carts");
 const STRIPE_API_KEY = config.get("stripe.api_key");
 const STRIPE_PUBLIC_KEY = config.get("stripe.public_key");
 const stripe = Stripe(STRIPE_API_KEY);
-
-
 
 async function create_session(req, res, next) {
   try {
@@ -72,11 +71,10 @@ async function events_webhook(req, res) {
 }
 
 const router = new Router();
-
 router.post("/session", create_session);
 router.post("/events", body_parser.json(), events_webhook);
 router.get("/checkout", (req, res) => res.render("cart/checkout", {stripe_public_key: STRIPE_PUBLIC_KEY}));
 router.get("/success", (req, res) => res.render("cart/success", {layout: null}));
-router.get("/cancel", (req, res) => res.render("cart/cancel", {layout: null}));
 
+router.MOUNT = MOUNT;
 module.exports = router;

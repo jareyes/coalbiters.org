@@ -2,13 +2,11 @@
 "use strict";
 const body_parser = require("body-parser");
 const bunyan = require("express-bunyan-logger");
-const cart = require("../routes/cart");
 const config = require("config");
 const database = require("../lib/database");
 const express = require("express");
-const events = require("../routes/events");
 const path = require("node:path");
-const ticket = require("../lib/tickets");
+const routes = require("../routes");
 const template = require("../lib/template");
 
 const PORT = config.get("app.port");
@@ -20,15 +18,14 @@ app.engine("hbs", template.engine);
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "..", "views/"));
 
+// Middleware
 app.use(bunyan());
 app.use(bunyan.errorLogger());
 app.use(express.static("static"));
 app.use(body_parser.urlencoded({extended: false}));
 
-app.get("/", (req, res) => res.render("index"));
-app.use("/events", events);
-app.use("/cart", cart);
-app.get("/about", (req, res) => res.render("about"));
+// Routes
+app.use(routes);
 
 if(require.main === module) {
   database.connect();

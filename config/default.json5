@@ -25,4 +25,14 @@
       rejectUnauthorized: false,
     },
   },
+  stripe: {},
+  routes: {
+    protocol: "https",
+    host: "coalbiters.org",
+    mount: {
+      tickets: "/ticket",
+      carts: "/cart",
+      events: "/events",
+    },
+  }
 }

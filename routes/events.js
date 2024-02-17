@@ -1,3 +1,4 @@
+const config = require("config");
 const email = require("../lib/email");
 const Event = require("../lib/event");
 const Reservation = require("../lib/reservation");
@@ -5,6 +6,8 @@ const helpers = require("../lib/helpers");
 const {Router} = require("express");
 const template = require("../lib/template");
 const User = require("../lib/user");
+
+const MOUNT = config.get("routes.mount.events");
 
 async function event_registration(req, res, next) {
   try {
@@ -93,4 +96,5 @@ router.get("/:slug", event_detail);
 router.get("/:slug/confirmed", event_confirmation);
 router.get("/:slug/invite.ics", event_ics);
 
+router.MOUNT = MOUNT;
 module.exports = router;
