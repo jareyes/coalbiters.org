@@ -1,4 +1,10 @@
 {{ assign "title" "Checkout" }}
+{{#block "style"}}
+body {
+  max-width: 1000px;
+}
+{{/block}}
+
 {{#block "scripts"}}
   <script src="https://js.stripe.com/v3/"></script>
 {{/block}}
@@ -10,9 +16,14 @@ const stripe = Stripe("{{stripe_public_key}}");
 initialize();
 
 async function initialize() {
-  const formData = new FormData();
-  formData.append("event_id", "{{ event_id}}");
-  const response = await fetch("/cart/session", {method: "POST", body: formData});
+  const body = "event_id={{ event_id }}";
+  const response = await fetch("/cart/session", {
+    method: "POST",
+    headers:{
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body,
+  });
   const {clientSecret} = await response.json();
   const checkout = await stripe.initEmbeddedCheckout({clientSecret});
   checkout.mount("#checkout");

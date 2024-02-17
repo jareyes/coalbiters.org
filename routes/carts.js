@@ -15,7 +15,7 @@ function get_return_url() {
   return `${protocol}://${host}${MOUNT}/success`;
 }
 
-async function checkout(req, res, next) {
+function checkout(req, res, next) {
   const form = req.body;
   const event_id = form.event_id;
   const locals = {event_id, stripe_public_key: STRIPE_PUBLIC_KEY};
@@ -24,11 +24,15 @@ async function checkout(req, res, next) {
 
 async function create_session(req, res, next) {
   try {
+    const form = req.body;
+    const event_id = form.event_id;
+    const event = await Event.get_by_id(event_id);
+
     const return_url = get_return_url();
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
-          price: 'price_1OkFRBDBDUSJ7VKx9OXWGIJP',
+          price: event.stripe_price_id,
           quantity: 1,
           adjustable_quantity: {enabled: true, maximum: 10},
         },
