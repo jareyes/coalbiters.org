@@ -8,6 +8,7 @@ const database = require("../lib/database");
 const express = require("express");
 const events = require("../routes/events");
 const path = require("node:path");
+const ticket = require("../lib/tickets");
 const template = require("../lib/template");
 
 const PORT = config.get("app.port");
