@@ -1,0 +1,18 @@
+{{ assign "title" "Checkout" }}
+{{#block "scripts"}}
+  <script src="https://js.stripe.com/v3/"></script>
+{{/block}}
+
+<div id="checkout"></div>
+
+<script>
+const stripe = Stripe("{{stripe_public_key}}");
+initialize();
+
+async function initialize() {
+  const response = await fetch("/cart/session", {method: "POST"});
+  const {clientSecret} = await response.json();
+  const checkout = await stripe.initEmbeddedCheckout({clientSecret});
+  checkout.mount("#checkout");
+}
+</script>

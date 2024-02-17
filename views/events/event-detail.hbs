@@ -54,7 +54,7 @@ time {
   </a>
   <p>Cost: <span class="cost">{{ usd_amount price }}</span></p>
 
-  <form id="signup-form" method="post" action="/events/signup">
+  <form id="signup-form" method="post" action="/event/signup">
     <label for="email">Email</label>
     <input type="email" name="email" required placeholder="Your email">
     <input type="hidden" name="event_id" value="{{ event_id }}">
