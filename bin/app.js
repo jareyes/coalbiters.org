@@ -2,6 +2,7 @@
 "use strict";
 const body_parser = require("body-parser");
 const bunyan = require("express-bunyan-logger");
+const cart = require("../routes/cart");
 const config = require("config");
 const database = require("../lib/database");
 const express = require("express");
@@ -25,6 +26,7 @@ app.use(body_parser.urlencoded({extended: false}));
 
 app.get("/", (req, res) => res.render("index"));
 app.use("/events", events);
+app.use("/cart", cart);
 app.get("/about", (req, res) => res.render("about"));
 
 if(require.main === module) {
