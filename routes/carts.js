@@ -3,13 +3,20 @@ const config = require("config");
 const {Router} = require("express");
 const Stripe = require("stripe");
 
-const MOUNT = config.get("routes.mount.carts");
+const ROUTES = config.get("routes");
+const MOUNT = ROUTES.mount.cart;
 const STRIPE_API_KEY = config.get("stripe.api_key");
 const STRIPE_PUBLIC_KEY = config.get("stripe.public_key");
 const stripe = Stripe(STRIPE_API_KEY);
 
+function get_return_url() {
+  const {protocol, host} = ROUTES;
+  return `${protocol}//${host}${MOUNT}/success`;
+}
+
 async function create_session(req, res, next) {
   try {
+    const return_url = get_return_url();
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -20,7 +27,7 @@ async function create_session(req, res, next) {
       ],
       automatic_tax: {enabled: true},
       mode: "payment",
-      return_url: "http://localhost:4000/cart/cancel",
+      return_url: return_url,
       ui_mode: "embedded",
     });
 
