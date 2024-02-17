@@ -4,7 +4,7 @@ const {Router} = require("express");
 const Stripe = require("stripe");
 
 const ROUTES = config.get("routes");
-const MOUNT = ROUTES.mount.cart;
+const MOUNT = ROUTES.mount.carts;
 const STRIPE_API_KEY = config.get("stripe.api_key");
 const STRIPE_PUBLIC_KEY = config.get("stripe.public_key");
 const stripe = Stripe(STRIPE_API_KEY);
@@ -79,7 +79,7 @@ async function events_webhook(req, res) {
 
 const router = new Router();
 router.post("/session", create_session);
-router.post("/events", body_parser.json(), events_webhook);
+router.post("/hook", body_parser.json(), events_webhook);
 router.get("/checkout", (req, res) => res.render("cart/checkout", {stripe_public_key: STRIPE_PUBLIC_KEY}));
 router.get("/success", (req, res) => res.render("cart/success", {layout: null}));
 

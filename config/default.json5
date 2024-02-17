@@ -32,7 +32,7 @@
     mount: {
       tickets: "/ticket",
       carts: "/cart",
-      events: "/events",
+      events: "/event",
     },
   }
 }
