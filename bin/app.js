@@ -19,8 +19,8 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "..", "views/"));
 
 // Middleware
-app.use(bunyan());
-app.use(bunyan.errorLogger());
+// app.use(bunyan());
+// app.use(bunyan.errorLogger());
 app.use(express.static("static"));
 app.use(body_parser.urlencoded({extended: false}));
 

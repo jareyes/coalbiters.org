@@ -19,9 +19,7 @@ async function initialize() {
   const body = "event_id={{ event_id }}";
   const response = await fetch("/cart/session", {
     method: "POST",
-    headers:{
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
+    headers:{"Content-Type": "application/x-www-form-urlencoded"},
     body,
   });
   const {clientSecret} = await response.json();
