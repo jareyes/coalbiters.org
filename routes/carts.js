@@ -67,12 +67,14 @@ async function fulfill_order(session) {
   const {event_id, confirmation_code} = session.metadata;
   const {line_items} = session;
   const quantity = line_items.data[0].quantity;
+  const date_paid = new Date(session.created * 1000);
   const ticket = Ticket.create(
     user_id,
     event_id,
     session.id,
     confirmation_code,
     quantity,
+    date_paid,
   );
   await ticket.save();
 
