@@ -1,6 +1,8 @@
 const config = require("config");
+const email = require("../lib/email");
 const Event = require("../lib/model/event");
 const express = require("express");
+const receipt = require("../lib/receipt");
 const {Router} = require("express");
 const Stripe = require("stripe");
 const Ticket = require("../lib/model/ticket");
@@ -80,10 +82,9 @@ async function fulfill_order(session) {
 
   // Create PDF
   const event = await Event.get_by_id(event_id);
-  const pdf = await Ticket.write_pdf(ticket, event);
+  const pdf = await receipt.write_pdf(ticket, event, user);
 
   // Send it out
-
   return pdf;
 }
 
