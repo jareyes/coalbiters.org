@@ -392,7 +392,7 @@
     }
 
     table, tr, td {
-      /* border: 1px solid black; */
+      border: 1px solid red;
     }
     /*Media Queries ------------------------------ */
 
@@ -491,11 +491,11 @@
                         Directions:
                         The entrance is behind the building through a cargo bay on Water Street. Free public parking is available in Opera House Square and the parking garage on Sullivan Street. Dress warm. This is an underground party in an unheated space.
                         <!-- Tickets -->
-                        <table class="discount" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="width: 100%; -premailer-width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0; background-color: #F4F4F7; margin: 0; padding: 24px; border: 2px solid #CBCCCF;" bgcolor="#F4F4F7">
+                        <table class="discount" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="width: 100%; -premailer-width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0; background-color: #F4F4F7; margin: 0; padding: 24px; border: 0.5px solid #CBCCCF;" bgcolor="#F4F4F7">
                           <tr>
                             <td align="center" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px;">
                               <h1 class="f-fallback discount_heading" style="margin-top: 0; color: #333333; font-size: 22px; font-weight: bold; text-align: center;" align="center">Download your tickets!</h1>
-                              <p class="f-fallback discount_body" style="font-size: 15px; line-height: 1.625; text-align: center; color: #51545E; margin: .4em 0 1.1875em;" align="center">Download your tickets and present the QR code to attendent at the disco to obtain your headset.</p>
+                              <p class="f-fallback discount_body" style="font-size: 15px; line-height: 1.625; text-align: center; color: #51545E; margin: .4em 0 1.1875em;" align="center">Download your tickets and present the QR code to attendent at the disco to obtain your headset{{plural_ending}}.</p>
                               <!-- Border based button
            https://litmus.com/blog/a-guide-to-bulletproof-buttons-in-email-design -->
                               <table width="100%" border="0" cellspacing="0" cellpadding="0" role="presentation">
@@ -528,7 +528,7 @@
                                 </tr>
                                 {{#each line_item}}
                                 <tr>
-                                  <td width="80%" class="purchase_item" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 15px; color: #51545E; line-height: 18px; padding: 10px 0;"><span class="f-fallback">{{description}}</span></td>
+                                  <td width="80%" class="purchase_item" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 15px; color: #51545E; line-height: 18px; padding: 10px 0;"><span class="f-fallback">{{description}}{{#if quantity}} Qty: {{quantity}}{{/if}}</span></td>
                                   <td class="align-right" width="20%" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; text-align: right;" align="right"><span class="f-fallback">{{amount}}</span></td>
                                 </tr>
                                 {{/each}}
@@ -553,8 +553,8 @@
                         <table class="body-sub" role="presentation" style="margin-top: 25px; padding-top: 25px; border-top-width: 1px; border-top-color: #EAEAEC; border-top-style: solid;">
                           <tr>
                             <td style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px;">
-                              <p class="f-fallback sub" style="font-size: 13px; line-height: 1.625; color: #6B6E76; margin: .4em 0 1.1875em;"><strong>Need a printable copy for your records?</strong> You can <a href="{{action_url}}" style="color: #3869D4;">download a PDF version</a>.</p>
-                              <p class="f-fallback sub" style="font-size: 13px; line-height: 1.625; color: #6B6E76; margin: .4em 0 1.1875em;">Moved recently? Have a new credit card? You can easily <a href="{{billing_url}}" style="color: #3869D4;">update your billing information</a>.</p>
+                              <p class="f-fallback sub" style="font-size: 13px; line-height: 1.625; color: #6B6E76; margin: .4em 0 1.1875em;">You're receiving this email because you made a purchase at Claremont Coalbiters LLC, which partners with <a href="https://www.stripe.com" style="color: #3869D4;">Stripe</a> to provide payment processing.</p>
+                              <p class="f-fallback sub" style="font-size: 13px; line-height: 1.625; color: #6B6E76; margin: .4em 0 1.1875em;"><strong>Need a printable copy for your records?</strong> You can <a href="{{ticket_url}}" style="color: #3869D4;">download a PDF version</a>.</p>
                             </td>
                           </tr>
                         </table>
@@ -570,9 +570,9 @@
                   <tr>
                     <td class="content-cell" align="center" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px; padding: 35px;">
                       <p class="f-fallback sub align-center" style="font-size: 13px; line-height: 1.625; text-align: center; color: #6B6E76; margin: .4em 0 1.1875em;" align="center">
-                        [Company Name, LLC]
-                        <br />1234 Street Rd.
-                        <br />Suite 1234
+                        Claremont Coalbiters, LLC
+                        <!-- <br />44 Lincoln Heights
+                        <br />Claremont, NH 03473 -->
                       </p>
                     </td>
                   </tr>
