@@ -392,7 +392,7 @@
     }
 
     table, tr, td {
-      border: 1px solid red;
+      /* border: 1px solid red; */
     }
     /*Media Queries ------------------------------ */
 
@@ -465,7 +465,7 @@
     </style>
   </head>
   <body style="width: 100% !important; height: 100%; -webkit-text-size-adjust: none; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; background-color: #F4F4F7; color: #51545E; margin: 0;" bgcolor="#F4F4F7">
-    <span class="preheader" style="display: none !important; visibility: hidden; mso-hide: all; font-size: 1px; line-height: 1px; max-height: 0; max-width: 0; opacity: 0; overflow: hidden;">This is a receipt for your recent purchase on {{ purchase_date }}. No payment is due with this receipt.</span>
+    <span class="preheader" style="display: none !important; visibility: hidden; mso-hide: all; font-size: 1px; line-height: 1px; max-height: 0; max-width: 0; opacity: 0; overflow: hidden;">This is a receipt for your recent ticket purchase on {{ purchase_date }}. No payment is due with this receipt.</span>
     <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="width: 100%; -premailer-width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0; background-color: #F4F4F7; margin: 0; padding: 0;" bgcolor="#F4F4F7">
       <tr>
         <td align="center" style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px;">
@@ -487,9 +487,29 @@
                       <div class="f-fallback">
                         <h1 style="margin-top: 0; color: #333333; font-size: 22px; font-weight: bold; text-align: left;" align="left"><span style="background:#ffff00; padding: .25rem;">Claremont Coalbiters</span></h1>
                         <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">Congratulations! You've got a ticket to fun.</p>
-                        <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">Silent Disco, 7&ndash;10pm, Friday, March 1, 2024, 4 Opera House Square, Claremont, NH 03743, Open map</p>
-                        Directions:
-                        The entrance is behind the building through a cargo bay on Water Street. Free public parking is available in Opera House Square and the parking garage on Sullivan Street. Dress warm. This is an underground party in an unheated space.
+                        <!-- Event details -->
+                        <table style="color: #333333">
+                          <tr>
+                            <td style="font-size: 22px; font-weight: 400; line-height: 1.625; color: #333333; margin: .4em 0 1.1875em;">
+                              {{ event_series }}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>{{ event_title }}</td>
+                          </tr>
+                          <tr>
+                            <td><span style="background: #5accff; padding: 0.25rem;">{{ event_time }}</span></td>
+                          </tr>
+                          <tr>
+                            <td>{{ event_day }}, <span style="background: #f9f; padding: 0.25rem;">{{ event_date }}</span></td>
+                          </tr>
+                          <tr>
+                            <td>{{ venue_location }}</td>
+                          </tr>
+                          <tr>
+                            <td><a href="{{ location_url }}">Open map</a></td>
+                          </tr>
+                        </table>
                         <!-- Tickets -->
                         <table class="discount" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="width: 100%; -premailer-width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0; background-color: #F4F4F7; margin: 0; padding: 24px; border: 0.5px solid #CBCCCF;" bgcolor="#F4F4F7">
                           <tr>
@@ -508,10 +528,14 @@
                             </td>
                           </tr>
                         </table>
+                        <!-- Directions -->
+                        <p style="font-size: 16px; line-height: 1.625; color: #51545E; margin: .4em 0 1.1875em;">
+                        <span style="font-weight: bold;">Directions:</span> The entrance is behind the building through a cargo bay on Water Street. Free public parking is available in Opera House Square and the parking garage on Sullivan Street. Dress warm. This is an underground party in an unheated space.
+                        </p>
                         <table class="purchase" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="width: 100%; -premailer-width: 100%; -premailer-cellpadding: 0; -premailer-cellspacing: 0; margin: 0; padding: 35px 0;">
                           <tr>
                             <td style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px;">
-                              <h3 style="margin-top: 0; color: #333333; font-size: 14px; font-weight: bold; text-align: left;" align="left">Confirmation code: {{confirmation_code}}</h3></td>
+                              <h3 style="margin-top: 0; color: #333333; font-size: 14px; font-weight: bold; text-align: left;" align="left">Confirmation: {{confirmation_code}}</h3></td>
                             <td style="word-break: break-word; font-family: &quot;Nunito Sans&quot;, Helvetica, Arial, sans-serif; font-size: 16px;">
                               <h3 class="align-right" style="margin-top: 0; color: #333333; font-size: 14px; font-weight: bold; text-align: right;" align="right">{{date_paid}}</h3></td>
                           </tr>
