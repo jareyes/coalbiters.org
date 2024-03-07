@@ -61,10 +61,10 @@ async function event_detail(req, res, next) {
     const slug = req.params.slug;
     const event = await Event.get_by_slug(slug);
     const event_daterange = helpers.display_daterange(
-      event.start_datetime,
+      event.start_time,
       event.duration_m,
     );
-    const registration_open = (Date.now() < event.start_datetime.getTime());
+    const registration_open = (Date.now() < event.start_time.getTime());
     const locals = {...event, event_daterange, registration_open};
     res.render("events/paid-event-detail", locals);
   }

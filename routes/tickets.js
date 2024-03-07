@@ -1,13 +1,15 @@
 const config = require("config");
 const email = require("../lib/email");
 const Event = require("../lib/model/event");
+const receipt = require("../lib/receipt");
 const {Router} = require("express");
 const template = require("../lib/template");
 const Ticket = require("../lib/model/ticket");
+const User = require("../lib/model/user");
 
 const MOUNT = config.get("routes.mount.tickets");
 
-const EVENT_DAY_FORMAT = Intl.DateTimeFormat("en-US", {weekday: "long"});
+const EVENT_WEEKDAY_FORMAT = Intl.DateTimeFormat("en-US", {weekday: "long"});
 const EVENT_DATE_FORMAT = Intl.DateTimeFormat("en-US", {dateStyle: "long"});
 const EVENT_TIME_FORMAT = Intl.DateTimeFormat("en-US", {
   hour: "numeric",
@@ -37,9 +39,9 @@ async function display_email(req, res, next) {
       confirmation_code: ticket.confirmation_code,
       date_paid: PAID_DATE_FORMAT.format(ticket.date_paid),
       directions: event.directions,
-      event_series: "Silent Disco",
-      event_title: "Winter Underground",
-      event_day: EVENT_DAY_FORMAT.format(event.start_time),
+      event_series: event.series,
+      event_title: event.title,
+      event_weekday: EVENT_WEEKDAY_FORMAT.format(event.start_time),
       event_date: EVENT_DATE_FORMAT.format(event.start_time),
       event_times: format_event_times(event.start_time, event.end_time),
       line_items: [
@@ -62,7 +64,6 @@ async function display_email(req, res, next) {
 
     // const html = await template.render("emails/ticket-html", locals);
     // await email.send("josh@joshreyes.com", "Tickets Yo", html, "Read the html");
-    // res.status(200).end();
     res.render("emails/ticket-html", locals);
   }
   catch(err) {
@@ -72,11 +73,52 @@ async function display_email(req, res, next) {
 }
 
 function validate_ticket(req, res, next) {
-  console.log(req.params);
+  const {confirmation_code} = req.params;
+  const {token: validation_token} = req.query;
+  const is_valid = Ticket.is_valid(confirmation_code, validation_token);
+  if(is_valid) { return next(); }
+  res.sendStatus(400).end();
 }
 
+async function view_ticket(req, res, next) {
+  try {
+    const {confirmation_code} = req.params;
+    const ticket = await Ticket.get_by_confirmation_code(confirmation_code);
+    const event = await Event.get_by_id(ticket.event_id);
+    const user = await User.get_by_id(ticket.user_id);
+    const buf = await receipt.write_pdf(ticket, event, user);
+
+    res.setHeader("Content-Length", buf.length);
+    res.setHeader("Content-Type", "application/pdf");
+    const filename = `coalbiters-disco-ticket-${confirmation_code.toLowerCase()}.pdf`;
+    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+    res.send(buf);
+  }
+  catch(err) {
+    next(err);
+  }
+}
+
+async function checkin_ticket(req, res, next) {
+  try {
+    // Is this a ticket?
+    const {confirmation_code} = req.params;
+    const ticket = await Ticket.get_by_confirmation_code(confirmation_code);
+    // Is it check-in time?
+  }
+  catch(err) {
+
+  }
+}
+
+
 const router = new Router();
-router.get("/:confirmation_code([A-Z]{5}\\d{1,2})", display_email);
+router.get("/check-in/:confirmation_code([A-Z]{5}\\d{1,2})", checkin_ticket);
+router.get(
+  "/:confirmation_code([A-Z]{5}\\d{1,2})",
+  validate_ticket,
+  view_ticket,
+);
 
 router.MOUNT = MOUNT;
 module.exports = router;
