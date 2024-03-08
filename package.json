@@ -17,7 +17,7 @@
     "fast-xml-parser": "4.3.4",
     "hbs": "4.2.0",
     "mysql2": "3.6.1",
-    "nodemailer": "6.9.7",
+    "nodemailer": "6.9.11",
     "pdfkit": "0.14.0",
     "qrcode": "1.5.3",
     "stripe": "14.16.0"

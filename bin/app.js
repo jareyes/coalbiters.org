@@ -6,11 +6,11 @@ const config = require("config");
 const database = require("../lib/database");
 const express = require("express");
 const path = require("node:path");
+const process = require("node:process");
 const routes = require("../routes");
 const template = require("../lib/template");
 
 const PORT = config.get("app.port");
-
 const app = express();
 
 // Templates
@@ -27,12 +27,17 @@ app.use(body_parser.urlencoded({extended: false}));
 // Routes
 app.use(routes);
 
-if(require.main === module) {
-  database.connect();
+async function main() {
+  process.env.TZ = "UTC";
+  await database.connect();
   app.listen(
     PORT,
     () => console.log({event: "App.START", port: PORT}),
   );
+}
+
+if(require.main === module) {
+  main();
 }
 
 module.exports = app;

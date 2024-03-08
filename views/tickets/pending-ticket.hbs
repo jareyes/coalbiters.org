@@ -1,1 +1,26 @@
-PENDING TICKET
+{{#block "style"}}
+body {
+  background: #e7b416;
+  color: #333;
+}
+.check-in {
+  font-size: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.check-in-time {
+  font-weight: bold;
+}
+.info {
+  margin-top: 2rem;
+}
+{{/block}}
+
+<h1>TOO EARLY</h1>
+<p class="check-in">
+  Check-in for {{event.series}} {{event.title}} begins at
+</p>
+<p class="check-in check-in-time">{{check_in_start}}</p>
+
+<p class="info">
+  Please do not scan ticket yourself, as it may invalidate the ticket.
+</p>

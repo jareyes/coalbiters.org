@@ -16,12 +16,13 @@ const EVENT_TIME_FORMAT = Intl.DateTimeFormat("en-US", {
   minute: "numeric",
   timeZone: "America/New_York"
 });
+const FULL_DATE_FORMAT = Intl.DateTimeFormat("en-US", {dateStyle: "long", timeStyle: "short", timeZone: "America/New_York"})
 const PAID_DATE_FORMAT = Intl.DateTimeFormat("en-us", {dateStyle: "long"});
 const DOLLAR_FORMAT = new Intl.NumberFormat(
   "en-US",
   {style: "currency", currency: "USD"},
 );
-const ONE_HOUR_MS = 60 * 60 * 1000;
+const CHECK_IN_WINDOW_MS = 10 * 60 * 1000;
 
 function format_event_times(start_date, end_date) {
   const range = EVENT_TIME_FORMAT.formatRange(start_date, end_date);
@@ -101,7 +102,7 @@ async function view_ticket(req, res, next) {
 }
 
 function is_too_early(start_ms, now_ms=Date.now()) {
-  return now_ms - start_ms >= ONE_HOUR_MS;
+  return now_ms - start_ms >= CHECK_IN_WINDOW_MS;
 }
 
 function is_too_late(start_ms, now_ms=Date.now()) {
@@ -112,33 +113,43 @@ async function checkin_ticket(req, res, next) {
   try {
     const {confirmation_code} = req.params;
     const ticket = await Ticket.get_by_confirmation_code(confirmation_code);
-    const event = await Event.get_by(event.event_id);
+    const event = await Event.get_by_id(ticket.event_id);
+    const user = await User.get_by_id(ticket.user_id);
     const start_ms = event.start_time.getTime();
     const end_ms = event.end_time.getTime();
-
+    const locals = {layout: "ticket-check-in", ticket, event};
     if(is_too_early(start_ms)) {
-      return res.render("tickets/pending-ticket", {ticket, event});
+      const check_in_start = new Date(event.start_time.getTime() - CHECK_IN_WINDOW_MS);
+      const formatted_check_in_start = FULL_DATE_FORMAT.format(check_in_start);
+      return res.render(
+        "tickets/pending-ticket",
+        {
+          ...locals,
+          check_in_start: formatted_check_in_start,
+        }
+      );
     }
     if(is_too_late(end_ms)) {
-      return res.render("tickets/expired-ticket", {ticket, event});
+      return res.render("tickets/expired-ticket", locals);
     }
-    if(ticket.date_paid !== undefined) {
-      return res.render("tickets/used-ticket", {ticket, event});
+    if(ticket.time_used !== undefined) {
+      const checked_in_time = EVENT_TIME_FORMAT.format(ticket.time_used);
+      return res.render("tickets/used-ticket", {checked_in_time, ...locals});
     }
     try {
       ticket.date_paid = new Date();
-      await ticket.save();
+      await ticket.punch();
       const user = await User.get_by_id(ticket.user_id);
-      res.render("tickets/valid-ticket", {ticket, event, user});
+      res.render("tickets/valid-ticket", {user, ...locals});
     }
     catch(err) {
       console.log(err);
-      res.render("tickets/valid-ticket", {ticket, event, error_saving: true});
+      res.render("tickets/valid-ticket", locals);
     }
   }
   catch(err) {
     console.log(err);
-    res.render("tickets/invalid-ticket");
+    res.render("tickets/invalid-ticket", {layout: "ticket-check-in"});
   }
 }
 
