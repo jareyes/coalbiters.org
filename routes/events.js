@@ -66,7 +66,7 @@ async function event_detail(req, res, next) {
     );
     const registration_open = (Date.now() < event.start_time.getTime());
     const locals = {...event, event_daterange, registration_open};
-    res.render("events/paid-event-detail", locals);
+    res.render("events/event-detail", locals);
   }
   catch(err) {
     next(err);
