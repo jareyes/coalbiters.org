@@ -102,11 +102,11 @@ async function view_ticket(req, res, next) {
 }
 
 function is_too_early(start_ms, now_ms=Date.now()) {
-  return now_ms - start_ms >= CHECK_IN_WINDOW_MS;
+  return start_ms - now_ms >= CHECK_IN_WINDOW_MS;
 }
 
 function is_too_late(start_ms, now_ms=Date.now()) {
-  return now_ms - start_ms <= 0;
+  return now_ms - start_ms >= 0;
 }
 
 async function checkin_ticket(req, res, next) {
@@ -132,12 +132,12 @@ async function checkin_ticket(req, res, next) {
     if(is_too_late(end_ms)) {
       return res.render("tickets/expired-ticket", locals);
     }
-    if(ticket.time_used !== undefined) {
+    if(ticket.time_used !== null) {
+      console.log("ticket.time_used", ticket.time_used);
       const checked_in_time = EVENT_TIME_FORMAT.format(ticket.time_used);
       return res.render("tickets/used-ticket", {checked_in_time, ...locals});
     }
     try {
-      ticket.date_paid = new Date();
       await ticket.punch();
       const user = await User.get_by_id(ticket.user_id);
       res.render("tickets/valid-ticket", {user, ...locals});
