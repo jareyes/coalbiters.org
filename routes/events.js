@@ -1,11 +1,11 @@
 const config = require("config");
 const email = require("../lib/email");
-const Event = require("../lib/event");
-const Reservation = require("../lib/reservation");
+const Event = require("../lib/model/event");
+const Reservation = require("../lib/model/reservation");
 const helpers = require("../lib/helpers");
 const {Router} = require("express");
 const template = require("../lib/template");
-const User = require("../lib/user");
+const User = require("../lib/model/user");
 
 const MOUNT = config.get("routes.mount.events");
 
@@ -61,10 +61,10 @@ async function event_detail(req, res, next) {
     const slug = req.params.slug;
     const event = await Event.get_by_slug(slug);
     const event_daterange = helpers.display_daterange(
-      event.start_datetime,
+      event.start_time,
       event.duration_m,
     );
-    const registration_open = (Date.now() < event.start_datetime.getTime());
+    const registration_open = (Date.now() < event.start_time.getTime());
     const locals = {...event, event_daterange, registration_open};
     res.render("events/event-detail", locals);
   }

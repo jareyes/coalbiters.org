@@ -5,5 +5,9 @@ CREATE TABLE IF NOT EXISTS tickets (
   event_id INT NOT NULL,
   confirmation_code VARCHAR(16),
   quantity INT NOT NULL DEFAULT 1,
-  time_used TIMESTAMP DEFAULT NULL
+  date_paid TIMESTAMP,
+  date_used TIMESTAMP,
+  date_sent TIMESTAMP,
+  PRIMARY KEY (ticket_id),
+  UNIQUE(confirmation_code)
 );
