@@ -1,4 +1,4 @@
-ALTER TABLE events DROP COLUMN event_time;
+ALTER TABLE events DROP COLUMN event_date;
 ALTER TABLE events DROP COLUMN modtime;
 ALTER TABLE events DROP COLUMN price;
 ALTER TABLE events ADD COLUMN price INT;
