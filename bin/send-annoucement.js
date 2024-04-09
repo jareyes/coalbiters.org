@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const database = require("../lib/database");
 const email = require("../lib/email");
-const Event = require("../lib/event");
+const Event = require("../lib/model/event");
 const process = require("node:process");
 const template = require("../lib/template");
 
@@ -15,7 +15,7 @@ async function get_emails() {
 }
 
 async function main(event_slug, emails) {
-  database.connect();
+  await database.connect();
   try {
     const event = await Event.get_by_slug(event_slug);
     const locals = {...event, layout: null};
@@ -25,7 +25,7 @@ async function main(event_slug, emails) {
 
     // Get a list of recipients
     if(emails.length < 1) {
-      emails = await get_emails();
+      // emails = await get_emails();
     }
     // Send off each email
     for(const email_address of emails) {

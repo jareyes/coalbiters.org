@@ -17,7 +17,7 @@ async function event_registration(req, res, next) {
 
     let user = await User.get_by_email(email_address);
     if(user === null) {
-      user = User.create(email);
+      user = User.create(email_address);
       await user.save()
     }
 
