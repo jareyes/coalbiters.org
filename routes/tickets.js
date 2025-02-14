@@ -1,6 +1,7 @@
 const config = require("config");
 const email = require("../lib/email");
 const Event = require("../lib/model/event");
+const QRCode = require("qrcode");
 const receipt = require("../lib/receipt");
 const {Router} = require("express");
 const template = require("../lib/template");
@@ -8,8 +9,20 @@ const Ticket = require("../lib/model/ticket");
 const User = require("../lib/model/user");
 
 const MOUNT = config.get("routes.mount.tickets");
-
-const EVENT_WEEKDAY_FORMAT = Intl.DateTimeFormat("en-US", {weekday: "long"});
+const DATE_PAID_FORMAT = new Intl.DateTimeFormat(
+  "en-US",
+  {
+    dateStyle: "short",
+    timeZone: "America/New_York",
+  }
+);
+const TIME_PAID_FORMAT = new Intl.DateTimeFormat(
+  "en-US",
+  {
+    timeStyle: "short",
+    timeZone: "America/New_York"
+  }
+);
 const EVENT_DATE_FORMAT = Intl.DateTimeFormat("en-US", {dateStyle: "long"});
 const EVENT_TIME_FORMAT = Intl.DateTimeFormat("en-US", {
   hour: "numeric",
@@ -17,61 +30,50 @@ const EVENT_TIME_FORMAT = Intl.DateTimeFormat("en-US", {
   timeZone: "America/New_York"
 });
 const FULL_DATE_FORMAT = Intl.DateTimeFormat("en-US", {dateStyle: "long", timeStyle: "short", timeZone: "America/New_York"})
-const PAID_DATE_FORMAT = Intl.DateTimeFormat("en-us", {dateStyle: "long"});
 const DOLLAR_FORMAT = new Intl.NumberFormat(
   "en-US",
   {style: "currency", currency: "USD"},
 );
 const CHECK_IN_WINDOW_MS = 10 * 60 * 1000;
+const QRCODE_OPTS = {width: 250, correctionLevel: "Q"};
 
-function format_event_times(start_date, end_date) {
-  const range = EVENT_TIME_FORMAT.formatRange(start_date, end_date);
-  return range.replaceAll(":00", "");
+function format_date_paid(d) {
+    if(d === null) {
+        return "";
+    }
+    const date = DATE_PAID_FORMAT.format(d);
+    const time = TIME_PAID_FORMAT.format(d);
+    return `${date} ${time}`;
 }
 
-async function display_email(req, res, next) {
-  try {
-    const {confirmation_code} = req.params;
-    const ticket = await Ticket.get_by_confirmation_code(confirmation_code);
-    const event = await Event.get_by_id(ticket.event_id);
-    const ticket_amount = DOLLAR_FORMAT.format(ticket.quantity * event.price / 100);
 
-    const locals = {
-      layout: null,
-      confirmation_code: ticket.confirmation_code,
-      date_paid: PAID_DATE_FORMAT.format(ticket.date_paid),
-      directions: event.directions,
-      event_series: event.series,
-      event_title: event.title,
-      event_weekday: EVENT_WEEKDAY_FORMAT.format(event.start_time),
-      event_date: EVENT_DATE_FORMAT.format(event.start_time),
-      event_times: format_event_times(event.start_time, event.end_time),
-      line_items: [
-        {
-          description: "Silent Disco Ticket",
-          quantity: ticket.quantity,
-          amount: ticket_amount,
-        },
-        {
-          description: "Tax",
-          amount: DOLLAR_FORMAT.format(0),
-        }
-      ],
-      location_url: event.location_url,
-      ticket_url: ticket.url,
-      support_url: "mailto:questions@coalbiters.org",
-      venue_address: event.venue_address,
-      total: ticket_amount,
-    }
-
-    // const html = await template.render("emails/ticket-html", locals);
-    // await email.send("josh@joshreyes.com", "Tickets Yo", html, "Read the html");
-    res.render("emails/ticket-html", locals);
-  }
-  catch(err) {
-    console.log(err);
-    next(err);
-  }
+function format_event_time(startDate, endDate) {
+    // Days and months arrays for converting numerical values to names
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    // Get day, month, date, and year
+    const dayName = days[startDate.getDay()];
+    const month = months[startDate.getMonth()];
+    const date = startDate.getDate();
+    const year = startDate.getFullYear();
+    
+    // Format times
+    const formatTime = (date, show_ampm=true) => {
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Convert 0 to 12
+        return `${hours}:${minutes}${show_ampm ? " " +ampm : ""}`;
+    };
+    
+    const startTime = formatTime(startDate, false);
+    const endTime = formatTime(endDate);
+    
+    // Combine all parts
+    return `${dayName}, ${month} ${date}, ${year}. ${startTime}&ndash;${endTime}`;
 }
 
 function validate_ticket(req, res, next) {
@@ -82,7 +84,7 @@ function validate_ticket(req, res, next) {
   res.sendStatus(400).end();
 }
 
-async function view_ticket(req, res, next) {
+async function view_ticket_pdf(req, res, next) {
   try {
     const {confirmation_code} = req.params;
     const ticket = await Ticket.get_by_confirmation_code(confirmation_code);
@@ -92,13 +94,43 @@ async function view_ticket(req, res, next) {
 
     res.setHeader("Content-Length", buf.length);
     res.setHeader("Content-Type", "application/pdf");
-    const filename = `coalbiters-disco-ticket-${confirmation_code.toLowerCase()}.pdf`;
+      const filename = `${event.slug}-ticket-${confirmation_code.toLowerCase()}.pdf`;
     res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
     res.send(buf);
   }
   catch(err) {
     next(err);
   }
+}
+
+async function view_ticket(req, res, next) {
+    try {
+        const {confirmation_code} = req.params;
+        const ticket = await Ticket.get_by_confirmation_code(confirmation_code);
+        const event = await Event.get_by_id(ticket.event_id);
+        const user = await User.get_by_id(ticket.user_id);
+
+        const qrcode_data_url = await QRCode.toDataURL(ticket.checkin_url, QRCODE_OPTS);
+        const amount_paid_usd = DOLLAR_FORMAT.format(event.price * ticket.quantity / 100);
+        const date_paid = format_date_paid(ticket.date_paid);
+        const unit_price_usd = DOLLAR_FORMAT.format(event.price / 100);
+        const event_datetime = format_event_time(event.start_time, event.end_time);
+        res.render("tickets/ticket-detail", {
+            layout: false,
+            ticket,
+            event,
+            user,
+            event_datetime,
+            amount_paid_usd,
+            date_paid,
+            qrcode_data_url,
+            unit_price_usd,
+            ticket_pdf_url: ticket.pdf_url,
+        });
+    }
+    catch(err) {
+        next(err);
+    }
 }
 
 function is_too_early(start_ms, now_ms=Date.now()) {
@@ -156,9 +188,14 @@ async function checkin_ticket(req, res, next) {
 const router = new Router();
 router.get("/check-in/:confirmation_code([A-Z]{5}\\d{1,2})", checkin_ticket);
 router.get(
-  "/:confirmation_code([A-Z]{5}\\d{1,2})",
+    "/:confirmation_code([A-Z]{5}\\d{1,2})",
+    validate_ticket,
+    view_ticket,
+);
+router.get(
+  "/:confirmation_code([A-Z]{5}\\d{1,2}).pdf",
   validate_ticket,
-  view_ticket,
+  view_ticket_pdf,
 );
 
 router.MOUNT = MOUNT;

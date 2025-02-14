@@ -32,6 +32,7 @@ async function create_session(req, res, next) {
         const event = await Event.get_by_id(event_id);
         const confirmation_code = Ticket.generate_confirmation();
         const return_url = Ticket.get_url(confirmation_code);
+        console.log("session", "confirmation_code", confirmation_code, "return_url", return_url);
         
         const session = await stripe.checkout.sessions.create({
             line_items: [
@@ -88,44 +89,43 @@ async function fulfill_order(session) {
     await Email.send_confirmation(email, event, attachment);
     console.log({
         event: "Carts.FULLFILLED",
-        user: email,
-        party: event.slug,
-        ticket_count: quantity,
+        ...ticket,
     });
 }
 
 async function events_webhook(req, res) {
-  const payload = req.body;
-  const signature = req.headers["stripe-signature"];
-
-  try {
-    const event = stripe.webhooks.constructEvent(
-      payload,
-      signature,
-      STRIPE_WEBHOOK_SECRET,
-    );
-
-    if(event.data.object.object !== "checkout.session") {
-      return res.sendStatus(200);
+    const payload = req.body;
+    const signature = req.headers["stripe-signature"];
+    
+    try {
+        const event = stripe.webhooks.constructEvent(
+            payload,
+            signature,
+            STRIPE_WEBHOOK_SECRET,
+        );
+        
+        if(event.data.object.object !== "checkout.session") {
+            return res.sendStatus(200);
+        }
+        
+        const session = await stripe.checkout.sessions.retrieve(
+            event.data.object.id,
+            { expand: ["line_items"] },
+        );
+        
+        if(
+            event.type === "checkout.session.completed" &&
+                session.payment_status === "paid"
+        ) {
+            await fulfill_order(session);
+        }
+        console.log("webhook success")
+        return res.sendStatus(200);
     }
-
-    const session = await stripe.checkout.sessions.retrieve(
-      event.data.object.id,
-      { expand: ["line_items"] },
-    );
-
-    if(
-      event.type === "checkout.session.completed" &&
-      session.payment_status === "paid"
-    ) {
-      await fulfill_order(session);
-    }
-
-    res.sendStatus(200);
-  }
-  catch(err) {
-    res.status(400).send(`Webhook Error: ${err.message}`);
-    console.log(err);
+    catch(err) {
+        console.log("webhook failed");
+        console.log(err);
+        res.status(400).send(`Webhook Error: ${err.message}`);
   }
 }
 

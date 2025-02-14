@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/reset.css">
+    <title>Coalbiters Club</title>
+    <style>
+      :root {
+          --cb-color-black: black;
+          --cb-color-blue: #5accff;
+          --cb-color-gray: #e9e9ed;
+          --cb-color-pink: #f9f;        
+          --cb-color-yellow: yellow;
+          --cb-color-screen: rgba(0, 0, 0, 0.1);
+          --cb-padding: 1rem 2rem 1rem;
+          --cb-padding-bottom: 1rem;
+          --cb-padding-left-right: 2rem;
+          --cb-padding-top: 1rem;
+      }
+      html {
+          background: var(--cb-color-yellow);
+          color: var(--cb-color-black);
+          font-family: Roboto, Verdana, sans-serif;
+          font-size: 16px;
+          height: 100%;
+          width: 100%;
+      }
+      body {
+          min-height: 100vh;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+      }
+      article, footer, header {
+          width: 100%;
+                 
+      }
+      article {
+          display: flex;
+          flex-grow: 1;
+          justify-content: center;
+      }
+      #nav {
+          padding: var(--cb-padding);          
+      }
+      #nav li a {
+          line-height: 2rem;
+          text-decoration: underline dotted;
+          color: var(--cb-color-black);
+      }
+      #main {
+          padding-bottom: 1rem;
+      }
+      #footer {
+          font-size: 0.75rem;
+          padding: var(--cb-padding);
+          text-align: right;
+      }
+      .location span {
+          display: block;
+          line-height: 1.4rem;
+      }
+      .event-time {
+          line-height: 2rem;
+      }
+      .event-title {
+          margin-top: 2.5rem;
+          font-size: 2rem;         
+      }
+      .ticket-qr-code {
+         display: block;
+         margin: 1.5rem auto 1rem;
+         border: 1px #222 solid;
+         width: 252px;
+         height: 252px;
+      }
+      .ticket-admit {
+          display: block;
+          text-align: center;
+          font-weight: bold;
+          font-size: 0.85rem;
+      }
+      h2 {
+          font-size: 1.125rem;
+          margin: 2rem 0 1rem;
+          border-bottom: 1px var(--cb-color-black) solid;
+      }
+      table {
+          width: 100%;
+          margin: 1rem 0;
+          border-collapse:separate; 
+          border-spacing: 0 0.75rem;
+      }
+      table td:nth-child(1) {
+          font-weight: bold;
+      }
+      table td:nth-child(2) {
+          text-align: end;
+      }
+      .ticket-line-item {
+          font-size: 0.8rem;
+          font-weight: normal !important;
+          padding-bottom: 1rem;
+      }
+      dt {
+          font-size: 0.8rem;
+          text-align: left;
+          margin: 1rem 0 0.35rem;
+      }
+      dd {
+          text-align: left;
+      }
+      .map-link, .download-link {
+          text-transform: lowercase;
+          font-variant: small-caps;
+          font-weight: bold;
+          display: block;
+          margin-top: 1rem;
+          color: var(--cb-color-black);
+          text-decoration: underline dotted;          
+      }
+      .download-link {
+          margin: 0;
+          padding-top: 0.5rem;
+      }
+      .download-icon {
+          text-decoration: underline yellow;
+      }
+    </style>   
+  </head>
+    <body>
+      <article>
+        <div id="main">
+          <h1 class="event-title">{{event.title}}</h1>
+          <span class="event-time">{{{event_datetime}}}</span>
+          <a class="download-link" href="{{ticket_pdf_url}}">
+            <span class="download-icon">⬇️  </span> Download PDF
+          </a>
+          <img class="ticket-qr-code" src="{{qrcode_data_url}}">
+          <span class="ticket-admit">Admit: {{ticket.quantity}} Dancers</span>
+          
+          <h2>Location</h2>
+          <div class="location">
+            <span>{{event.venue}}</span>
+            <span>{{event.venue_address}}</span>
+            <a class="map-link" href="{{event.location_url}}" target="_blank">Open Map</a>
+          </div>
+
+          <h2>Receipt</h2>
+          <dl>
+            <dt>Confirmation Code</dt>
+            <dd>{{ticket.confirmation_code}}</dd>
+            
+            <dt>Amount Paid</dt>
+            <dd>{{amount_paid_usd}}</dd>
+            
+            <dt>Date Paid</dt>
+            <dd>{{date_paid}}</dd>
+            
+            <dt>Email Address</dt>
+            <dd>{{user.email}}</dd>
+          </dl>
+          
+          <h2>Summary</h2>
+          <table>
+            <tr>
+              <td>Silent Disco Ticket</td>
+              <td>{{amount_paid_usd}}</td>
+            </tr>
+            <tr>
+              <td class="ticket-line-item">Quantity: {{ticket.quantity}}</td>
+              <td class="ticket-line-item">{{unit_price_usd}} per ticket</td>
+            </tr>
+            <tr>
+              <td>Tax</td>
+              <td>$0.00</td>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td>{{amount_paid_usd}}</td>
+            </tr>
+          </table>
+        </div><!-- end main -->
+      </article>
+      <footer>
+        <p id="footer">&copy;2025 Claremont Coalbiters Club</p>
+      </footer>
+    </body>
+</html>
