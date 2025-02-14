@@ -12,7 +12,7 @@ const ROUTES = config.get("routes");
 const MOUNT = ROUTES.mount.carts;
 const STRIPE_API_KEY = config.get("stripe.api_key");
 const STRIPE_PUBLIC_KEY = config.get("stripe.public_key");
-const STRIPE_WEBHOOK_SECRET = "whsec_889a10ebcefe709f0a191ae29d376f527dc47bec2cd3d67fa6194d8a7c921e5b";
+const STRIPE_WEBHOOK_SECRET = config.get("stripe.webhook_secret");
 
 const stripe = Stripe(STRIPE_API_KEY);
 
@@ -130,7 +130,7 @@ async function events_webhook(req, res) {
 }
 
 const router = new Router();
-router.post("/session", create_session);
+router.post("/session", express.json(), create_session);
 router.post("/hook", express.raw({type: "application/json"}), events_webhook);
 router.post("/checkout", checkout);
 router.get("/success", (req, res) => res.render("cart/success", {layout: null}));
