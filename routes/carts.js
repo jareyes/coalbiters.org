@@ -120,7 +120,7 @@ async function events_webhook(req, res) {
             await fulfill_order(session);
         }
         console.log("webhook success")
-        return res.sendStatus(200);
+        return res.send();
     }
     catch(err) {
         console.log("webhook failed");
