@@ -16,13 +16,12 @@
     // Not sending the mail ourselves on 465, so it's not
     // secure. But also not going over the wire.
     secure: false,
+    tls: {
+      ciphers: "SSLv3",
+    },
     auth: {
       user: null,
       pass: null,
-    },
-    tls: {
-      // ProtonMail Bridge local client uses a self-signed cert
-      rejectUnauthorized: false,
     },
   },
   routes: {

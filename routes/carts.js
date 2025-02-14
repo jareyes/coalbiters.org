@@ -1,5 +1,5 @@
 const config = require("config");
-const email = require("../lib/email");
+const Email = require("../lib/email");
 const Event = require("../lib/model/event");
 const express = require("express");
 const receipt = require("../lib/receipt");
@@ -16,76 +16,82 @@ const STRIPE_WEBHOOK_SECRET = "whsec_889a10ebcefe709f0a191ae29d376f527dc47bec2cd
 
 const stripe = Stripe(STRIPE_API_KEY);
 
-function get_return_url() {
-  const {protocol, host} = ROUTES;
-  return `${protocol}://${host}${MOUNT}/success`;
-}
-
 function checkout(req, res, next) {
-  const form = req.body;
-  const event_id = form.event_id;
-  const locals = {event_id, stripe_public_key: STRIPE_PUBLIC_KEY};
-  res.render("cart/checkout", locals);
+    const form = req.body;
+    const event_id = form.event_id;
+    const ticket_count = form.ticket_count ?? 1;
+    const locals = {event_id, ticket_count, stripe_public_key: STRIPE_PUBLIC_KEY};
+    res.render("cart/checkout", locals);
 }
 
 async function create_session(req, res, next) {
-  try {
-    const form = req.body;
-    const event_id = form.event_id;
-    const event = await Event.get_by_id(event_id);
-    const confirmation_code = Ticket.generate_confirmation();
-    const return_url = get_return_url();
-
-    const session = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price: event.stripe_price_id,
-          quantity: 1,
-          adjustable_quantity: {enabled: true, maximum: 10},
-        },
-      ],
-      automatic_tax: {enabled: true},
-      metadata: {confirmation_code, event_id},
-      mode: "payment",
-      return_url: return_url,
-      ui_mode: "embedded",
-    });
-
-    res.json({clientSecret: session.client_secret});
-  }
-  catch(err) {
-    next(err);
-  }
+    try {
+        const form = req.body;
+        const event_id = form.event_id;
+        const quantity = form.ticket_count;
+        const event = await Event.get_by_id(event_id);
+        const confirmation_code = Ticket.generate_confirmation();
+        const return_url = Ticket.get_url(confirmation_code);
+        
+        const session = await stripe.checkout.sessions.create({
+            line_items: [
+                {
+                    price: event.stripe_price_id,
+                    quantity,
+                    adjustable_quantity: {enabled: true, maximum: 10},
+                },
+            ],
+            automatic_tax: {enabled: true},
+            metadata: {confirmation_code, event_id},
+            mode: "payment",
+            return_url: return_url,
+            ui_mode: "embedded",
+        });
+        
+        res.json({clientSecret: session.client_secret});
+    }
+    catch(err) {
+        next(err);
+    }
 }
 
 async function fulfill_order(session) {
-  // Create user
-  const email = session.customer_details.email;
-  const user = User.create(email);
-  await user.save();
-  const {user_id} = user;
-
-  // Create ticket
-  const {event_id, confirmation_code} = session.metadata;
-  const {line_items} = session;
-  const quantity = line_items.data[0].quantity;
-  const date_paid = new Date(session.created * 1000);
-  const ticket = Ticket.create(
-    user_id,
-    event_id,
-    session.id,
-    confirmation_code,
-    quantity,
-    date_paid,
-  );
-  await ticket.save();
-
-  // Create PDF
-  const event = await Event.get_by_id(event_id);
-  const pdf = await receipt.write_pdf(ticket, event, user);
-
-  // Send it out
-  return pdf;
+    // Create user
+    const email = session.customer_details.email;
+    console.log("email", email);
+    const user = User.create(email);
+    await user.save();
+    const {user_id} = user;
+    
+    // Create ticket
+    const {event_id, confirmation_code} = session.metadata;
+    const {line_items} = session;
+    const quantity = line_items.data[0].quantity;
+    const date_paid = new Date(session.created * 1000);
+    const ticket = Ticket.create(
+        user_id,
+        event_id,
+        session.id,
+        confirmation_code,
+        quantity,
+        date_paid,
+    );
+    await ticket.save();
+    
+    // Create PDF
+    const event = await Event.get_by_id(event_id);
+    const pdf = await receipt.write_pdf(ticket, event, user);
+    
+    // Send it out
+    const filename = `${event.slug}-ticket.pdf`;
+    const attachment = {filename, content: pdf};
+    await Email.send_confirmation(email, event, attachment);
+    console.log({
+        event: "Carts.FULLFILLED",
+        user: email,
+        party: event.slug,
+        ticket_count: quantity,
+    });
 }
 
 async function events_webhook(req, res) {

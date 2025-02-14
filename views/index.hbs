@@ -1,120 +1,207 @@
-{{ assign "hide_home" true }}
-{{#block "style" }}
-article {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-body {
-  background: yellow;
-}
-h1, h2 {
-  padding: 0;
-  margin: 0;
-}
-.main {
-  margin: 0 auto;
-}
-.main h1 {
-  font-size: 3rem;
-}
-.main h2 {
-  margin-top: 0.5rem;
-  margin-bottom: 2rem;
-}
-.event-details {
-  font-size: 2rem;
-  height: 14rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  line-height: 2rem;
-}
-.event-detail {
-  display: block;
-}
-.event-time {
-  background-color: #5accff;
-  padding-left: 2px;
-  padding-right: 5px;
-}
-.event-date {
-  background-color: #f9f;
-  padding: 2px 5px;
-  line-height: 2em;
-}
-.main p {
-  margin-top: 2rem;
-}
-
-.main-event {
-  all: inherit;
-  cursor: pointer;
-}
-
-.main-event:hover .call-to-action {
-  text-decoration: underline;
-}
-
-.sign-up-form {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: start;
-  margin-top: 5rem;
-  margin-bottom: 1rem;
-}
-.email-label {
-  display: none;
-}
-
-.email-input {
-  flex-grow: 1;
-  margin-right: 0.5rem;
-  background: yellow;
-  border: none;
-  border-bottom: 2px solid #000;
-}
-
-.signup-button {
-  background: #e9e9ed;
-}
-
-.call-to-action {
-  line-height: 8rem;
-  font-weight: bold;
-  font-size: 1.5rem;
-}
-
-@media screen and (max-width: 600px) {
-  .event-details {
-    font-size: 1.5rem;
-    height: 15rem;
-  }
-  .call-to-action {
-    text-decoration: underline;
-  }
-}
-{{/block}}
-<div class="main">
-  <a class="main-event" href="https://www.eventbrite.com/e/coalbiters-silent-disco-tickets-1139343179119">
-  <h1>Dance Party</h1>
-  <h2>Silent Disco</h2>
-  <div class="event-details">
-    <time class="event-detail">
-      <span class="event-time">7pm&ndash;11pm</span></time>
-    <span class="event-detail">Friday, <span class="event-date">January 31, 2025</span></span>
-    <span class="event-detail">The Claremont Country Club</span>
-    <span class="event-detail call-to-action">🎟️ Get your tickets now</span>
-  </div>
-  </a>
-  <!-- <form class="sign-up-form" method="post" action="/event/signup">
-    <label class="email-label" for="email">Email</label>
-    <input class="email-input" name="email" required type="email" placeholder="Enter your email">
-    <input type="hidden" name="event_id" value="">
-
-    <input class="signup-button" type="submit" value="Sign Up">
-  </form>
-  -->
-</div>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/reset.css">
+    <title>Coalbiters Club</title>
+    <style>
+      :root {
+          --cb-color-black: black;
+          --cb-color-blue: #5accff;
+          --cb-color-gray: #e9e9ed;
+          --cb-color-pink: #f9f;        
+          --cb-color-yellow: yellow;
+          --cb-color-screen: rgba(0, 0, 0, 0.1);
+          --cb-padding: 1rem 2rem 1rem;
+          --cb-padding-bottom: 1rem;
+          --cb-padding-left-right: 2rem;
+          --cb-padding-top: 1rem;
+      }
+      html {
+          background: var(--cb-color-yellow);
+          color: var(--cb-color-black);
+          font-family: Roboto, Verdana, sans-serif;
+          font-size: 16px;
+          height: 100%;
+          width: 100%;
+      }
+      body {
+          min-height: 100vh;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+      }
+      article, footer, header {
+          width: 100%
+      }
+      article {
+          align-items: center;
+          display: flex;
+          flex-grow: 1;
+          justify-content: center;
+      }
+      #nav {
+          padding: var(--cb-padding);          
+      }
+      #nav li a {
+          line-height: 2rem;
+          text-decoration: underline dotted;
+          color: var(--cb-color-black);
+      }
+      #nav li a:hover {
+          text-decoration: 
+      }
+      #main {
+          max-width: 600px;
+          padding-bottom: 1rem;
+      }
+      #footer {
+          font-size: 0.75rem;
+          padding: var(--cb-padding);
+          text-align: right;
+      }
+      #event-details {
+          padding-top: 2rem;
+          font-size: 1.5rem;
+          line-height: 2.75rem;
+      }
+      .event-detail {
+          display: block;
+      }
+      .event-title {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+      }
+      .event-subtitle {
+          font-size: 2rem;
+      }
+      .event-time {
+          background: var(--cb-color-blue);
+          padding: 0.25rem 0.50rem;
+      }
+      .event-date {
+          background: var(--cb-color-pink);
+          padding: 0.25rem 0.50rem;
+      }
+      .hidden {
+          display: none;
+      }
+      #ticket-selector {
+          margin-top: 3rem;
+          max-width: 600px;
+          border-left: 2px solid black;
+          border-top: 2px solid black;
+          border-bottom: 2px solid black;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          height: 2.625rem;
+      }
+      #ticket-selector button {
+          border: none;
+          border-right: 2px solid black;
+          font-size: 1rem;
+          font-weight: bold;
+          text-align: center;
+      }
+      #ticket-selector button:active {
+          background: var(--cb-color-pink);
+          color: var(--cb-color-black);
+      }
+      #ticket-selector .disabled:active {
+          background: #bfbfbf;
+          color: #303030;
+      }
+      #ticket-count-input {
+          appearance: textfield;
+          text-align: center;
+          background: white;
+          border: none;
+          border-right: 2px solid black;
+          max-width: 2.625rem;
+          transition: none;
+          font-size: 1rem;
+          font-weight: bold;
+      }
+      .ticket-increment-button {
+          width: 2.625rem;
+          background: white;
+      }
+      #ticket-submit-button {
+          flex-grow: 1;
+          color: var(--cb-color-gray);
+          background: black;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav id="nav">
+        <ul>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/about">About Coalbiters</a></li>
+        </ul>
+      </nav>
+    </header>
+    <article>
+      <div id="main">
+        <h1 class="event-title">Silent Disco</h1>      
+        <span class="event-subtitle">Dance Party</span>
+        <div id="event-details">
+          <span class="event-detail"><span class="event-time">7pm&ndash;10pm</span></span>
+          <span class="event-detail">Friday, <span class="event-date">February 28, 2025</span></span>
+          <span class="event-detail">Claremont Country Club</span>
+          </div><!-- event-details -->
+        <form id="ticket-selector" method="post" action="/cart/checkout">
+          <input type="hidden" name="event_id" value="9">
+          <input id="ticket-count-input" inputmode="numeric" type="number" min="1" name="ticket_count" value="1" title="Ticket count">
+          <button id="ticket-increment-button" type="button" class="ticket-increment-button">
+            +
+            <span class="hidden">One more ticket</span>
+          </button>
+          <button id="ticket-decrement-button" type="button" class="ticket-increment-button disabled">
+            &ndash;
+            <span class="hidden">One less ticket</span>
+          </button>
+          <button type="submit" id="ticket-submit-button">
+            <span>Get Tickets</span>
+          </button>
+        </form><!-- end ticket-selector -->
+      </div><!-- end event -->
+    </article>
+    <footer>
+      <p id="footer">&copy;2025 Claremont Coalbiters Club</p>
+    </footer>
+    <script>
+      (() => {
+          const increment_button = document.querySelector("#ticket-increment-button");
+          increment_button.addEventListener("click", () => {
+              const ticket_input = document.querySelector("#ticket-count-input");
+              if(Number.isNaN(ticket_input.valueAsNumber)) {
+                  ticket_input.valueAsNumber = 0;
+              }
+              const value = ticket_input.valueAsNumber++;
+              
+              const decrement_button = document.querySelector("#ticket-decrement-button");
+              decrement_button.classList.remove("disabled");
+              
+          });
+          
+          const decrement_button = document.querySelector("#ticket-decrement-button");
+          decrement_button.addEventListener("click", () => {
+              const ticket_input = document.querySelector("#ticket-count-input");
+              if(ticket_input.valueAsNumber > 1) {
+                  ticket_input.valueAsNumber--;
+              }
+              
+              const decrement_button = document.querySelector("#ticket-decrement-button");
+              if(ticket_input.valueAsNumber < 2) {
+                  decrement_button.classList.add("disabled");
+              }
+          });
+      })();
+    </script>
+  </body>
+</html>

@@ -16,13 +16,15 @@ const stripe = Stripe("{{stripe_public_key}}");
 initialize();
 
 async function initialize() {
-  const body = "event_id={{ event_id }}";
-  const response = await fetch("/cart/session", {
+const body = {event_id: {{ event_id }}, ticket_count: {{ ticket_count }} };
+console.log("body", body);
+  const res = await fetch("/cart/session", {
     method: "POST",
-    headers:{"Content-Type": "application/x-www-form-urlencoded"},
-    body,
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(body),
   });
-  const {clientSecret} = await response.json();
+  const {clientSecret} = await res.json();
+  console.log("clientSecret", clientSecret);
   const checkout = await stripe.initEmbeddedCheckout({clientSecret});
   checkout.mount("#checkout");
 }

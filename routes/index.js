@@ -4,7 +4,7 @@ const events = require("./events");
 const tickets = require("./tickets");
 
 const router = new Router();
-router.get("/", (req, res) => res.render("index"));
+router.get("/", (req, res) => res.render("index", {layout: null}));
 router.get("/about", (req, res) => res.render("about"));
 router.get("/events", (req, res) => res.render("events"));
 
