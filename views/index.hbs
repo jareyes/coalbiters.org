@@ -41,7 +41,12 @@
           display: flex;
           flex-grow: 1;
           justify-content: center;
-      }
+     }
+     section {
+          margin: 2rem 0 2rem;
+          padding-top: 2rem;
+          border-top: 1px solid black;        
+     }
       #nav {
           padding: var(--cb-padding);          
       }
@@ -55,7 +60,7 @@
       }
       #main {
           max-width: 600px;
-          padding-bottom: 1rem;
+          padding: var(--cb-padding);
       }
       #footer {
           font-size: 0.75rem;
@@ -80,6 +85,9 @@
       .event-time {
           background: var(--cb-color-blue);
           padding: 0.25rem 0.50rem;
+      }
+      .event-location {
+          line-height: 2rem;
       }
       .event-date {
           background: var(--cb-color-pink);
@@ -134,6 +142,13 @@
           color: var(--cb-color-gray);
           background: black;
       }
+      h2 {
+      font-size: 1.25rem;
+      }
+      p {
+      margin-top: 1rem;
+      line-height: 1.25rem;
+      }
     </style>
   </head>
   <body>
@@ -148,14 +163,14 @@
     <article>
       <div id="main">
         <h1 class="event-title">Silent Disco</h1>      
-        <span class="event-subtitle">Dance Party</span>
+        <span class="event-subtitle">Stevens Grad Night Charity Edition</span>
         <div id="event-details">
           <span class="event-detail"><span class="event-time">7pm&ndash;10pm</span></span>
-          <span class="event-detail">Friday, <span class="event-date">February 28, 2025</span></span>
-          <span class="event-detail">Claremont Country Club</span>
+          <span class="event-detail">Friday, <span class="event-date">March 28, 2025</span></span>
+          <span class="event-detail event-location">Claremont Country Club</span>
           </div><!-- event-details -->
         <form id="ticket-selector" method="post" action="/cart/checkout">
-          <input type="hidden" name="event_id" value="9">
+          <input type="hidden" name="event_id" value="10">
           <input id="ticket-count-input" inputmode="numeric" type="number" min="1" name="ticket_count" value="1" title="Ticket count">
           <button id="ticket-increment-button" type="button" class="ticket-increment-button">
             +
@@ -169,7 +184,18 @@
             <span>Get Tickets</span>
           </button>
         </form><!-- end ticket-selector -->
-      </div><!-- end event -->
+        <section>
+          <h2>It's a fundraiser</h2>
+          <p>
+            We're throwing a dance party to raise funds for the Stevens High School
+            grad night. All profits from this event will go directly to support
+            the new graduates.
+          </p>
+          <p>
+            Age 21+. Tickets $12 per headset
+          </p>
+        </section>
+      </div><!-- end main -->
     </article>
     <footer>
       <p id="footer">&copy;2025 Claremont Coalbiters Club</p>
