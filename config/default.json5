@@ -10,14 +10,14 @@
     timezone: "Z",
   },
   nodemailer: {
-    host: "127.0.0.1",
-    port: 1025,
+    host: null,
+    port: 587,
     // We're sending to local ProtonMail Bridge.
     // Not sending the mail ourselves on 465, so it's not
     // secure. But also not going over the wire.
     secure: false,
     tls: {
-      ciphers: "SSLv3",
+       ciphers: "SSLv3",
     },
     auth: {
       user: null,

@@ -23,12 +23,14 @@ const TIME_PAID_FORMAT = new Intl.DateTimeFormat(
     timeZone: "America/New_York"
   }
 );
-const EVENT_DATE_FORMAT = Intl.DateTimeFormat("en-US", {dateStyle: "long"});
-const EVENT_TIME_FORMAT = Intl.DateTimeFormat("en-US", {
-  hour: "numeric",
-  minute: "numeric",
-  timeZone: "America/New_York"
-});
+const EVENT_DATETIME_FORMAT = Intl.DateTimeFormat(
+    "en-US",
+    {
+	dateStyle: "full",
+	timeStyle: "short",
+	timeZone: "America/New_York",
+    },
+);
 const FULL_DATE_FORMAT = Intl.DateTimeFormat("en-US", {dateStyle: "long", timeStyle: "short", timeZone: "America/New_York"})
 const DOLLAR_FORMAT = new Intl.NumberFormat(
   "en-US",
@@ -47,33 +49,9 @@ function format_date_paid(d) {
 }
 
 
-function format_event_time(startDate, endDate) {
-    // Days and months arrays for converting numerical values to names
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                    'July', 'August', 'September', 'October', 'November', 'December'];
-    
-    // Get day, month, date, and year
-    const dayName = days[startDate.getDay()];
-    const month = months[startDate.getMonth()];
-    const date = startDate.getDate();
-    const year = startDate.getFullYear();
-    
-    // Format times
-    const formatTime = (date, show_ampm=true) => {
-        let hours = date.getHours();
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // Convert 0 to 12
-        return `${hours}:${minutes}${show_ampm ? " " +ampm : ""}`;
-    };
-    
-    const startTime = formatTime(startDate, false);
-    const endTime = formatTime(endDate);
-    
-    // Combine all parts
-    return `${dayName}, ${month} ${date}, ${year}. ${startTime}&ndash;${endTime}`;
+function format_event_time(start_date, end_date) {
+    const formatted = EVENT_DATETIME_FORMAT.formatRange(start_date, end_date);
+    return formatted;
 }
 
 function validate_ticket(req, res, next) {

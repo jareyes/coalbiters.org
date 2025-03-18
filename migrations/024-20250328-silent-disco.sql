@@ -13,7 +13,7 @@ INSERT INTO events (
    stripe_price_id,
    price
 ) VALUES (
-  9,
+  10,
   "Silent Disco",
   "2025-03-28-silent-disco",
   "2025-03-29 00:00:00",

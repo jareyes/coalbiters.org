@@ -24,6 +24,6 @@ INSERT INTO events (
   "53 Country Club Road, Claremont, NH 03743",
   "Turn up the driveway and continue until you hit the club house. Park anywhere in the lot. We'll see you inside!",
   "It's that time of the month again! Grab a headset and dance like there's nobody watching. Switch between three channels of music all night long. The Country Club has a full bar and free parking. Rest in between songs with your fellow Coalbiter friends.",
-  "price_1QsOz0DBDUSJ7VKxWcvhPNho",
+  "price_1QsltRDBDUSJ7VKxQYl4cttC",
   1200
 );
