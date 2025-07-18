@@ -15,7 +15,7 @@ INSERT INTO events (
 ) VALUES (
   15,
   "Silent Book Club",
-  "2025-07-31-silent-disco",
+  "2025-07-31-book-club",
   "2025-07-31 21:30:00",
   180,
   "b4f35080-33c8-4bf4-bac5-c73c907a48eb",
