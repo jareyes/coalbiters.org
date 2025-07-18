@@ -5,6 +5,7 @@ const tickets = require("./tickets");
 
 const router = new Router();
 router.get("/", (req, res) => res.render("index", {layout: false}));
+router.get("/book-club", (req, res) => res.render("book-club", {layout: false}));
 router.get("/about", (req, res) => res.render("about"));
 router.get("/events", (req, res) => res.render("events"));
 

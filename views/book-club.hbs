@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/reset.css">
-    <title>Coalbiters Club</title>
+    <title>Coalbiters Club | Silent Book Club</title>
     <style>
       :root {
           --cb-color-black: black;
@@ -43,8 +43,8 @@
           justify-content: center;
      }
      section {
-          margin: 2rem 0 2rem;
-          padding-top: 2rem;
+     margin: 2rem 0 2rem;
+     padding-top: 0.5rem;
           border-top: 1px solid black;        
      }
       #nav {
@@ -118,24 +118,9 @@
           background: var(--cb-color-pink);
           color: var(--cb-color-black);
       }
-      #ticket-selector .disabled:active {
-          background: #bfbfbf;
-          color: #303030;
-      }
-      #ticket-count-input {
-          appearance: textfield;
-          text-align: center;
-          background: white;
-          border: none;
-          border-right: 2px solid black;
-          max-width: 2.625rem;
-          transition: none;
-          font-size: 1rem;
-          font-weight: bold;
-      }
-      .ticket-increment-button {
-          width: 2.625rem;
-          background: white;
+      #email-input {
+      padding-left: 1rem;
+      flex-grow: 3;
       }
       #ticket-submit-button {
           flex-grow: 1;
@@ -143,11 +128,28 @@
           background: black;
       }
       h2 {
+      padding-top: 1.5rem;
       font-size: 1.25rem;
       }
       p {
       margin-top: 1rem;
       line-height: 1.25rem;
+      }
+      em {
+      font-weight: bold;
+      }
+      .schedule {
+      padding-top: 1rem;
+      }
+      dt:first-of-type {
+      padding-top: 0;
+      }
+      dt {
+      padding-top: 1rem;
+      font-weight: bold;
+      }
+      dd {
+      padding: 0.25rem 0;
       }
     </style>
   </head>
@@ -155,79 +157,60 @@
     <header>
       <nav id="nav">
         <ul>
-          <li><a href="/book-club">Silent Book Club</a></li>
+          <li><a href="/">Home</a></li>
           <li><a href="/about">About Coalbiters</a></li>
         </ul>
       </nav>
     </header>
     <article>
       <div id="main">
-        <h1 class="event-title">Silent Disco</h1>      
-        <span class="event-subtitle">Dance Party</span>
+        <h1 class="event-title">Introvert Happy Hour</h1>      
+        <span class="event-subtitle">Silent Book Club</span>
         <div id="event-details">
-          <span class="event-detail"><span class="event-time">7pm&ndash;10pm</span></span>
-          <span class="event-detail">Friday, <span class="event-date">July 25, 2025</span></span>
-          <span class="event-detail event-location">Claremont Country Club</span>
-          </div><!-- event-details -->
-        <form id="ticket-selector" method="post" action="/cart/checkout">
-          <input type="hidden" name="event_id" value="14">
-          <input id="ticket-count-input" inputmode="numeric" type="number" min="1" name="ticket_count" value="1" title="Ticket count">
-          <button id="ticket-increment-button" type="button" class="ticket-increment-button">
-            +
-            <span class="hidden">One more ticket</span>
-          </button>
-          <button id="ticket-decrement-button" type="button" class="ticket-increment-button disabled">
-            &ndash;
-            <span class="hidden">One less ticket</span>
-          </button>
+          <span class="event-detail"><span class="event-time">5:30pm&ndash;7pm</span></span>
+          <span class="event-detail">Thursday, <span class="event-date">July 31, 2025</span></span>
+          <span class="event-detail event-location">Fiske Free Library, Claremont</span>
+          </div><!-- end event-details -->
+        <form id="ticket-selector" method="post" action="/event/signup">
+          <input type="hidden" name="event_id" value="15">
+          <input id="email-input" type="email" name="email" placeholder="Your email">
           <button type="submit" id="ticket-submit-button">
-            <span>Get Tickets</span>
+            <span>Sign Up</span>
           </button>
         </form><!-- end ticket-selector -->
         <section>
-          <h2>Summer Dance Party!</h2>
+          <h2>What is a silent book club?</h2>
           <p>
-            Do you like fun? Do you like hot dogs? Then come to our next silent disco dance party.
-            We have both! Grab a headset and choose from three channels of music to dance to. Then grab a hot dog
-            or two from our complimentary hot dog bar.
+            At a silent book club, friends and strangers gather monthly to share what they're reading
+            and settle in for an hour of sustained, silent reading. At the end, readers can socialize&mdash;or not!
+            There is <em>no assigned reading</em>. Bring your own book&mdash;or pick one out at the
+            library. All readers are welcome. All events are <em>free</em>. 
           </p>
+          <p>The club schedule looks like this:</p>
+          <dl class="schedule">
+            <dt>5:30&ndash;6pm</dt>
+            <dd>Arrive, say hello and share what they've been reading</dd>
+            
+            <dt>6&ndash;7pm</dt>
+            <dd>Quiet reading hour</dd>
+            
+            <dt>7pm</dt>
+            <dd>Leave the library. Optional socializing elsewhere</dd>
+          </dl>
+          <h2>Is there an age limit?</h2>
           <p>
-            Tickets $12 per headset. Ages 18+
+            No way! We encourage everyone to join the club. Families with children, older people, younger
+            people, teens. We want you to come read with us!
           </p>
-        </section>
+          <h2>Where is it?</h2>
+          <p>
+            We meet in the Gilmore Room in the basement of the Fiske Free Library (<a href="https://maps.app.goo.gl/XhgBSPemMwgGBKDe7">map</a>) in Claremont, NH.
+          </p>
+        </section>        
       </div><!-- end main -->
     </article>
     <footer>
       <p id="footer">&copy;2025 Claremont Coalbiters Club</p>
     </footer>
-    <script>
-      (() => {
-          const increment_button = document.querySelector("#ticket-increment-button");
-          increment_button.addEventListener("click", () => {
-              const ticket_input = document.querySelector("#ticket-count-input");
-              if(Number.isNaN(ticket_input.valueAsNumber)) {
-                  ticket_input.valueAsNumber = 0;
-              }
-              const value = ticket_input.valueAsNumber++;
-              
-              const decrement_button = document.querySelector("#ticket-decrement-button");
-              decrement_button.classList.remove("disabled");
-              
-          });
-          
-          const decrement_button = document.querySelector("#ticket-decrement-button");
-          decrement_button.addEventListener("click", () => {
-              const ticket_input = document.querySelector("#ticket-count-input");
-              if(ticket_input.valueAsNumber > 1) {
-                  ticket_input.valueAsNumber--;
-              }
-              
-              const decrement_button = document.querySelector("#ticket-decrement-button");
-              if(ticket_input.valueAsNumber < 2) {
-                  decrement_button.classList.add("disabled");
-              }
-          });
-      })();
-    </script>
   </body>
 </html>
