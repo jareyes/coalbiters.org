@@ -2,6 +2,9 @@
   app: {
     port: 4000
   },
+  log: {
+    level: "info",
+  },
   mysql: {
     user: null,
     password: null,
@@ -32,6 +35,9 @@
       carts: "/cart",
       events: "/event",
     },
+  },
+  sqlite: {
+     filepath: "var/coalbiters.sqlite",
   },
   stripe: {},
   tickets: {
