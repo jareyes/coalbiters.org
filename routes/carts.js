@@ -59,7 +59,6 @@ async function create_session(req, res, next) {
 async function fulfill_order(session) {
     // Create user
     const email = session.customer_details.email;
-    console.log("email", email);
     const user = User.create(email);
     await user.save();
     const {user_id} = user;

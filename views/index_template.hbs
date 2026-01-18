@@ -46,31 +46,31 @@
   padding-bottom: 0.25rem;
   text-transform: uppercase;
   border-bottom: 1px solid black;
-margin-bottom: 0.75rem;
-margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  margin-top: 2.5rem;
 }
 #form-ticket {
-display: flex;
-flex-direction: column;
-margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    margin-top: 3rem;
 }
 #form-ticket-title {
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-margin-bottom: 0.15rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0.15rem;
 }
 #ticket-email {
-flex: 1;
-   border-left: 2px solid black;
+    flex: 1;
+    border-left: 2px solid black;
     border-top: 2px solid black;
     border-bottom: 2px solid black;
-line-height: 2.625rem;
-padding-left: 1rem;
-margin-bottom: 0.25rem;
+    line-height: 2.625rem;
+    padding-left: 1rem;
+    margin-bottom: 0.25rem;
 }
 .label {
-text-transform: uppercase;
+    text-transform: uppercase;
     font-size: 0.8rem;
 }
 #ticket-selector {
@@ -116,11 +116,11 @@ text-transform: uppercase;
 #ticket-submit-button {
     flex-grow: 1;
     color: var(--cb-color-gray);
-          background: black;
+    background: black;
 }
 .venue-name {
-font-size: 1.1rem;
-margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
 }
 {{/block}}
 
@@ -134,23 +134,24 @@ margin-bottom: 0.5rem;
 
 <div id="event-details">
   <span class="event-detail">
-    <span class="event-time">{{ event.start_time }}&ndash;{{ event.end_time}}</span>
+    <span class="event-time">{{ hour event.start event.timezone }}&ndash;{{
+    hour event.end event.timezone }} {{ day_period event.end event.timezone }}</span>
   </span>
-  <span class="event-detail">{{ event.weekday }},
-    <span class="event-date">{{event.date }}</span>
+  <span class="event-detail">{{ weekday event.start event.timezone }},
+    <span class="event-date">{{ date event.start event.timezone }}</span>
   </span>
-  <span class="event-detail event-location">{{ event.venue }}</span>
+  <span class="event-detail event-location">{{ event.venue_name }}</span>
 </div><!-- end event-details -->
 
 <form id="form-ticket" method="post" action="/cart/checkout">
   <div id="form-ticket-title">
     <span class="label">Sign Up</span>
-    <span class="label">Price: <span id="price">Free
+    <span class="label">Price: <span id="price">{{ amount_usd event.price_cents }}
       </span>
     </span>
   </div>
   <input type="hidden" name="event_id" value="{{ event.event_id }}">
-  <input id="ticket-email" type="email" required placeholder="your@email.com">
+  <input id="ticket-email" type="email" name="email_address" required placeholder="your@email.com">
   <div id="ticket-selector">
     <input id="ticket-count-input" inputmode="numeric" type="number" min="1" name="ticket_count" value="1" title="Ticket count">
       <button id="ticket-increment-button" type="button" class="ticket-increment-button">
@@ -173,10 +174,11 @@ margin-bottom: 0.5rem;
   <div class="subsection">
     <span class="subsection-title">Location</span>
     <ul>
-      <li class="venue-name">{{ event.venue }}</li>
+      <li class="venue-name">{{ event.venue_name }}</li>
       <li>{{ event.venue_address }}</li>
-      <li>{{ event.weekday }}, {{ event.date}}</li>
-      <li>{{ event.start_time }}&ndash;{{ event.end_time}}</li>
+      <li>{{ weekday event.start event.timezone }}, {{ date event.start
+      event.timezone }}</li>
+      <li>{{ hour event.start event.timezone}}&ndash;{{ hour event.end event.timezone}} {{ day_period event.end event.timezone}}</li>
     </ul>
     <div id="map"></div>
   </div><!-- end location -->
@@ -223,7 +225,7 @@ margin-bottom: 0.5rem;
           src: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="%23e74c3c" d="M16 0C9.373 0 4 5.373 4 12c0 8 12 20 12 20s12-12 12-20c0-6.627-5.373-12-12-12zm0 16c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"/></svg>`
       }),
       text: new ol.style.Text({
-          text: "{{{ event.venue }}}",
+          text: "{{{ event.venue_name }}}",
           offsetY: -45,
           font: "14px sans-serif",
           fill: new ol.style.Fill({color: "#000"}),

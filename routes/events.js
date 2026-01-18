@@ -5,34 +5,37 @@ const Reservation = require("../lib/model/reservation");
 const helpers = require("../lib/helpers");
 const {Router} = require("express");
 const template = require("../lib/template");
+const Ticket = require("../lib/model/ticket");
 const User = require("../lib/model/user");
 
 const MOUNT = config.get("routes.mount.events");
 
-async function event_registration(req, res, next) {
-  try {
-    const form = req.body;
-    const email_address = form.email;
-    const event_id = form.event_id;
-
-    let user = await User.get_by_email(email_address);
-    if(user === null) {
-      user = User.create(email_address);
-      await user.save()
+async function register(req, res, next) {
+    try {
+        const form = req.body;
+        const email_address = form.email_address;
+        const event_id = form.event_id;
+        const ticket_count = form.ticket_count;
+        
+        let user = await User.get_by_email(email_address);
+        if(user === null) {
+            user = User.create(email_address);
+            await user.save()
+        }
+        
+        const ticket = Ticket        
+        const reservation = Reservation.create(user.user_id, event_id);
+        await reservation.save();
+        
+        const event = await Event.get_by_id(event_id);
+        res.redirect(`${event.slug}/confirmed`);
+        
+        // Send confirmation email in background
+        email.send_confirmation(email_address, event);
     }
-
-    const reservation = Reservation.create(user.user_id, event_id);
-    await reservation.save();
-
-    const event = await Event.get_by_id(event_id);
-    res.redirect(`${event.slug}/confirmed`);
-
-    // Send confirmation email in background
-    email.send_confirmation(email_address, event);
-  }
-  catch(err) {
-    next(err);
-  }
+    catch(err) {
+        next(err);
+    }
 }
 
 function signup_success(req, res) {
@@ -91,7 +94,7 @@ async function event_confirmation(req, res, next) {
 
 const router = new Router();
 
-router.post("/signup", event_registration);
+router.post("/signup", register);
 router.get("/:slug", event_detail);
 router.get("/:slug/confirmed", event_confirmation);
 router.get("/:slug/invite.ics", event_ics);

@@ -8,36 +8,45 @@ const express = require("express");
 const path = require("node:path");
 const process = require("node:process");
 const routes = require("../routes");
+const {DatabaseSync} = require("node:sqlite");
 const template = require("../lib/template");
 
+const SQLITE_FILEPATH = config.get("sqlite.filepath");
 const PORT = config.get("app.port");
-const app = express();
 
-// Templates
-app.engine("hbs", template.engine);
-app.set("view engine", "hbs");
-app.set("views", path.join(__dirname, "..", "views/"));
+function create(sqlite) {
+    const app = express();
 
-// Middleware
-// app.use(bunyan());
-// app.use(bunyan.errorLogger());
-app.use(express.static("static"));
-app.use(body_parser.urlencoded({extended: false}));
-
-// Routes
-app.use(routes);
+    // Templates
+    app.engine("hbs", template.engine);
+    app.set("view engine", "hbs");
+    app.set("views", path.join(__dirname, "..", "views/"));
+    
+    // Middleware
+    // app.use(bunyan());
+    // app.use(bunyan.errorLogger());
+    app.use(express.static("static"));
+    app.use(body_parser.urlencoded({extended: false}));
+    
+    // Routes
+    app.use(routes(sqlite));
+    return app;
+}
 
 async function main() {
-  process.env.TZ = "UTC";
-  await database.connect();
-  app.listen(
-    PORT,
-    () => console.log({event: "App.START", port: PORT}),
-  );
+    process.env.TZ = "UTC";
+    const sqlite = new DatabaseSync(SQLITE_FILEPATH);
+    sqlite.exec("PRAGMA journal_mode = WAL");
+    const app = create(sqlite);
+    app.listen(
+        PORT,
+        () => console.log({
+            event: "App.START",
+            port: PORT,
+        }),
+    );
 }
 
 if(require.main === module) {
   main();
 }
-
-module.exports = app;
