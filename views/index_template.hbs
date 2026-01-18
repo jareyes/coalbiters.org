@@ -9,7 +9,7 @@
 }
 .event-title {
     font-size: 3rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
 }
 .event-subtitle {
     font-size: 2rem;
@@ -49,12 +49,32 @@
 margin-bottom: 0.75rem;
 margin-top: 2.5rem;
 }
-#ticket-price {
-    margin-top: 2.5rem;
+#form-ticket {
+display: flex;
+flex-direction: column;
+margin-top: 3rem;
+}
+#form-ticket-title {
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+margin-bottom: 0.15rem;
+}
+#ticket-email {
+flex: 1;
+   border-left: 2px solid black;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+line-height: 2.625rem;
+padding-left: 1rem;
+margin-bottom: 0.25rem;
+}
+.label {
+text-transform: uppercase;
+    font-size: 0.8rem;
 }
 #ticket-selector {
     margin-top: 0.25rem;
-    max-width: 600px;
     border-left: 2px solid black;
     border-top: 2px solid black;
     border-bottom: 2px solid black;
@@ -122,22 +142,30 @@ margin-bottom: 0.5rem;
   <span class="event-detail event-location">{{ event.venue }}</span>
 </div><!-- end event-details -->
 
-  <p id="ticket-price">Price: <span id="price">Free</span></p>
-  <form id="ticket-selector" method="post" action="/cart/checkout">
+<form id="form-ticket" method="post" action="/cart/checkout">
+  <div id="form-ticket-title">
+    <span class="label">Sign Up</span>
+    <span class="label">Price: <span id="price">Free
+      </span>
+    </span>
+  </div>
   <input type="hidden" name="event_id" value="{{ event.event_id }}">
-  <input id="ticket-count-input" inputmode="numeric" type="number" min="1" name="ticket_count" value="1" title="Ticket count">
-  <button id="ticket-increment-button" type="button" class="ticket-increment-button">
-    +
-    <span class="hidden">One more ticket</span>
-  </button>
-  <button id="ticket-decrement-button" type="button" class="ticket-increment-button disabled">
-    &ndash;
-    <span class="hidden">One less ticket</span>
-  </button>
-  <button type="submit" id="ticket-submit-button">
-    <span>Get Tickets</span>
-  </button>
-</form><!-- end ticket-selector -->
+  <input id="ticket-email" type="email" required placeholder="your@email.com">
+  <div id="ticket-selector">
+    <input id="ticket-count-input" inputmode="numeric" type="number" min="1" name="ticket_count" value="1" title="Ticket count">
+      <button id="ticket-increment-button" type="button" class="ticket-increment-button">
+      +
+      <span class="hidden">One more ticket</span>
+    </button>
+    <button id="ticket-decrement-button" type="button" class="ticket-increment-button disabled">
+      &ndash;
+      <span class="hidden">One less ticket</span>
+    </button>
+    <button type="submit" id="ticket-submit-button">
+      <span>Get Tickets</span>
+    </button>
+  </div><!-- end ticket-selector -->
+</form>
 <section>
   {{{ event.description }}}
 
@@ -172,7 +200,7 @@ margin-bottom: 0.5rem;
       if(Number.isNaN($ticket_input.valueAsNumber)) {
           $ticket_input.valueAsNumber = 0;
       }
-      const value = ticket_input.valueAsNumber++;
+      const value = $ticket_input.valueAsNumber++;
       const $decrement_button = document.querySelector("#ticket-decrement-button");
           $decrement_button.classList.remove("disabled");
   }
