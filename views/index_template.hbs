@@ -1,0 +1,209 @@
+{{#block "style"}}
+#event-details {
+    padding-top: 2rem;
+    font-size: 1.5rem;
+    line-height: 2.75rem;
+}
+.event-detail {
+    display: block;
+}
+.event-title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+.event-subtitle {
+    font-size: 2rem;
+}
+.event-time {
+    background: var(--cb-color-blue);
+    padding: 0.25rem 0.50rem;
+}
+.event-location {
+    line-height: 2rem;
+}
+.event-date {
+    background: var(--cb-color-pink);
+    padding: 0.25rem 0.50rem;
+}
+#map {
+    width: 100%;
+    height: 200px;
+    margin: 2rem 0;
+}
+.map-osm-layer {
+    filter: grayscale(100%);
+}
+#price {
+    font-weight: bold;
+}
+#ticket-price {
+    margin-top: 2.5rem;
+}
+#ticket-selector {
+    margin-top: 0.25rem;
+    max-width: 600px;
+    border-left: 2px solid black;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 2.625rem;
+}
+#ticket-selector button {
+    border: none;
+    border-right: 2px solid black;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+}
+#ticket-selector button:active {
+    background: var(--cb-color-pink);
+    color: var(--cb-color-black);
+}
+#ticket-selector .disabled:active {
+    background: #bfbfbf;
+    color: #303030;
+}
+#ticket-count-input {
+    appearance: textfield;
+    text-align: center;
+    background: white;
+    border: none;
+    border-right: 2px solid black;
+    max-width: 2.625rem;
+    transition: none;
+    font-size: 1rem;
+    font-weight: bold;
+}
+.ticket-increment-button {
+    width: 2.625rem;
+    background: white;
+}
+#ticket-submit-button {
+    flex-grow: 1;
+    color: var(--cb-color-gray);
+          background: black;
+}
+{{/block}}
+
+{{#block "scripts"}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css">
+<script src="https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js"></script>
+{{/block}}
+
+<h1 class="event-title">{{ event.title }}</h1>
+<span class="event-subtitle">{{ event.subtitle }}</span>
+<div id="event-details">
+  <span class="event-detail">
+    <span class="event-time">{{ event.start_time }}&ndash;{{ event.end_time}}</span>
+  </span>
+  <span class="event-detail">{{ event.weekday }},
+    <span class="event-date">{{event.date }}</span>
+  </span>
+  <span class="event-detail event-location">{{ event.venue }}</span>
+</div><!-- event-details -->
+
+  <p id="ticket-price">Price: <span id="price">Free</span></p>
+  <form id="ticket-selector" method="post" action="/cart/checkout">
+  <input type="hidden" name="event_id" value="{{ event.event_id }}">
+  <input id="ticket-count-input" inputmode="numeric" type="number" min="1" name="ticket_count" value="1" title="Ticket count">
+  <button id="ticket-increment-button" type="button" class="ticket-increment-button">
+    +
+    <span class="hidden">One more ticket</span>
+  </button>
+  <button id="ticket-decrement-button" type="button" class="ticket-increment-button disabled">
+    &ndash;
+    <span class="hidden">One less ticket</span>
+  </button>
+  <button type="submit" id="ticket-submit-button">
+    <span>Get Tickets</span>
+  </button>
+</form><!-- end ticket-selector -->
+<section>
+  {{{ event.description }}}
+  <div id="map"></div>
+</section>
+
+<script type="module">
+  function decrement() {
+      const $ticket_input = document.querySelector("#ticket-count-input");
+      if($ticket_input.valueAsNumber > 1) {
+          $ticket_input.valueAsNumber--;
+      }
+
+      const $decrement_button = document.querySelector("#ticket-decrement-button");
+      if($ticket_input.valueAsNumber < 2) {
+          $decrement_button.classList.add("disabled");
+      }
+  }
+
+  function increment() {
+      const $ticket_input = document.querySelector("#ticket-count-input");
+      if(Number.isNaN($ticket_input.valueAsNumber)) {
+          $ticket_input.valueAsNumber = 0;
+      }
+      const value = ticket_input.valueAsNumber++;
+      const $decrement_button = document.querySelector("#ticket-decrement-button");
+          $decrement_button.classList.remove("disabled");
+  }
+
+  const $decrement_button = document.querySelector("#ticket-decrement-button");
+  const $increment_button = document.querySelector("#ticket-increment-button");
+  $decrement_button.addEventListener("click", decrement);
+  $increment_button.addEventListener("click", increment);
+</script>
+<script type="module">
+  const coordinates = ol.proj.fromLonLat([
+      {{ event.longitude }},
+      {{ event.latitude }}
+  ]);
+
+  const pin_style = new ol.style.Style({
+      image: new ol.style.Icon({
+          // Pin point at bottom-center
+          anchor: [0.5, 1],
+          src: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path fill="%23e74c3c" d="M16 0C9.373 0 4 5.373 4 12c0 8 12 20 12 20s12-12 12-20c0-6.627-5.373-12-12-12zm0 16c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"/></svg>`
+      }),
+      text: new ol.style.Text({
+          text: "{{{ event.venue }}}",
+          offsetY: -45,
+          font: "14px sans-serif",
+          fill: new ol.style.Fill({color: "#000"}),
+          stroke: new ol.style.Stroke({
+              color: "#ddd",
+              width: 5,
+          })
+      })
+  });
+
+  const marker = new ol.Feature({
+      geometry: new ol.geom.Point(coordinates),
+  });
+  marker.setStyle(pin_style);
+
+  const marker_source = new ol.source.Vector({
+      features: [marker]
+  });
+
+  const marker_layer = new ol.layer.Vector({
+      source: marker_source
+  });
+
+  const osm_layer = new ol.layer.Tile({
+      source: new ol.source.OSM(),
+      className: "map-osm-layer",
+  });
+
+  const map = new ol.Map({
+      target: "map",
+      layers: [
+          osm_layer,
+          marker_layer,
+      ],
+      view: new ol.View({
+          center: coordinates,
+          zoom: 17
+      })
+  });
+</script>

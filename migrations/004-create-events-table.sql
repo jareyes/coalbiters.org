@@ -12,5 +12,6 @@ CREATE TABLE IF NOT EXISTS events (
    title TEXT NOT NULL,
    updated_ms INTEGER,
    venue TEXT,
-   venue_address TEXT
+   venue_address TEXT,
+   UNIQUE(slug)
 );
