@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS events (
    timezone TEXT DEFAULT "America/New_York",
    title TEXT NOT NULL,
    updated_ms INTEGER,
-   venue_name TEXT,
    venue_address TEXT,
+   venue_name TEXT,
+   venue_url TEXT,
    UNIQUE(slug)
 );

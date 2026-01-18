@@ -143,7 +143,7 @@
   <span class="event-detail event-location">{{ event.venue_name }}</span>
 </div><!-- end event-details -->
 
-<form id="form-ticket" method="post" action="/cart/checkout">
+<form id="form-ticket" method="post" action="/event/register">
   <div id="form-ticket-title">
     <span class="label">Sign Up</span>
     <span class="label">Price: <span id="price">{{ amount_usd event.price_cents }}
@@ -174,7 +174,7 @@
   <div class="subsection">
     <span class="subsection-title">Location</span>
     <ul>
-      <li class="venue-name">{{ event.venue_name }}</li>
+      <li class="venue-name"><a href="{{ event.venue_url }}">{{ event.venue_name }}</a></li>
       <li>{{ event.venue_address }}</li>
       <li>{{ weekday event.start event.timezone }}, {{ date event.start
       event.timezone }}</li>

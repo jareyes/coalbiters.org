@@ -1,7 +1,6 @@
 const config = require("config");
 const email = require("../lib/email");
 const Event = require("../lib/model/event");
-const Reservation = require("../lib/model/reservation");
 const helpers = require("../lib/helpers");
 const {Router} = require("express");
 const template = require("../lib/template");
@@ -10,22 +9,19 @@ const User = require("../lib/model/user");
 
 const MOUNT = config.get("routes.mount.events");
 
-async function register(req, res, next) {
+async function register(req, res, next, sqlite) {
     try {
         const form = req.body;
-        const email_address = form.email_address;
+        const email = form.email_address;
         const event_id = form.event_id;
         const ticket_count = form.ticket_count;
         
-        let user = await User.get_by_email(email_address);
+        let user = await User.get_by_email(email);
         if(user === null) {
-            user = User.create(email_address);
-            await user.save()
+            user = User.create(sqlite, {email});
         }
         
         const ticket = Ticket        
-        const reservation = Reservation.create(user.user_id, event_id);
-        await reservation.save();
         
         const event = await Event.get_by_id(event_id);
         res.redirect(`${event.slug}/confirmed`);
@@ -92,12 +88,18 @@ async function event_confirmation(req, res, next) {
   }
 }
 
-const router = new Router();
+function create(sqlite) {
+    const router = new Router();
+    router.MOUNT = MOUNT;
+    
+    router.post(
+        "/register",
+        middleware.supply(register, sqlite)
+    );
+    router.get("/:slug", event_detail);
+    router.get("/:slug/confirmed", event_confirmation);
+    router.get("/:slug/invite.ics", event_ics);    
+    return router;
+}
 
-router.post("/signup", register);
-router.get("/:slug", event_detail);
-router.get("/:slug/confirmed", event_confirmation);
-router.get("/:slug/invite.ics", event_ics);
-
-router.MOUNT = MOUNT;
-module.exports = router;
+module.exports = create;

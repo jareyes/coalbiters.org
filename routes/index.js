@@ -11,9 +11,7 @@ function home_page(req, res, next, sqlite) {
             sqlite,
             "2026-02-20-silent-disco",
         );
-        const opts = {event};
-        console.log("opts", opts);
-        res.render("index_template", opts);
+        res.render("index_template", {event});
     }
     catch(err) {
         next(err);
