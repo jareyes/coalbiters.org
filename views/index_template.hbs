@@ -28,13 +28,26 @@
 #map {
     width: 100%;
     height: 200px;
-    margin: 2rem 0;
+    margin: 1rem 0;
 }
 .map-osm-layer {
     filter: grayscale(100%);
 }
 #price {
     font-weight: bold;
+}
+.subsection li {
+    line-height: 1.5rem;
+}
+.subsection-title {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding-bottom: 0.25rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid black;
+margin-bottom: 0.75rem;
+margin-top: 2.5rem;
 }
 #ticket-price {
     margin-top: 2.5rem;
@@ -85,6 +98,10 @@
     color: var(--cb-color-gray);
           background: black;
 }
+.venue-name {
+font-size: 1.1rem;
+margin-bottom: 0.5rem;
+}
 {{/block}}
 
 {{#block "scripts"}}
@@ -94,6 +111,7 @@
 
 <h1 class="event-title">{{ event.title }}</h1>
 <span class="event-subtitle">{{ event.subtitle }}</span>
+
 <div id="event-details">
   <span class="event-detail">
     <span class="event-time">{{ event.start_time }}&ndash;{{ event.end_time}}</span>
@@ -102,7 +120,7 @@
     <span class="event-date">{{event.date }}</span>
   </span>
   <span class="event-detail event-location">{{ event.venue }}</span>
-</div><!-- event-details -->
+</div><!-- end event-details -->
 
   <p id="ticket-price">Price: <span id="price">Free</span></p>
   <form id="ticket-selector" method="post" action="/cart/checkout">
@@ -122,9 +140,20 @@
 </form><!-- end ticket-selector -->
 <section>
   {{{ event.description }}}
-  <div id="map"></div>
-</section>
 
+  <!-- location -->
+  <div class="subsection">
+    <span class="subsection-title">Location</span>
+    <ul>
+      <li class="venue-name">{{ event.venue }}</li>
+      <li>{{ event.venue_address }}</li>
+      <li>{{ event.weekday }}, {{ event.date}}</li>
+      <li>{{ event.start_time }}&ndash;{{ event.end_time}}</li>
+    </ul>
+    <div id="map"></div>
+  </div><!-- end location -->
+</section>
+  
 <script type="module">
   function decrement() {
       const $ticket_input = document.querySelector("#ticket-count-input");
