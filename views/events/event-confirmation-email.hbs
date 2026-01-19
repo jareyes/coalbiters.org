@@ -3,9 +3,9 @@
 <p>We're so glad that you signed up for some fun with us.</p>
 
 <table style="margin: 0 auto">
-  <tr><td><a href="http://coalbiters.org/event/{{slug}}">{{title}}</a></td></tr>
-  <tr><td>{{ humanized_date start_time}}</td></tr>
-  <tr><td>{{ venue }}, {{ venue_address }} (<a href="{{location_url}}">map</a>)</td></tr>
+  <tr><td><a href="http://coalbiters.org/event/{{ event.slug }}">{{ event.title }}</a></td></tr>
+  <tr><td>{{ humanized_date event.start }}</td></tr>
+  <tr><td>{{ event.venue_name }}, {{ event.venue_address }} (<a href="{{ event.location_url }}">map</a>)</td></tr>
 </table>
 
 <p>We'll send you another email to remind again closer to the event date,

@@ -6,6 +6,7 @@ INSERT INTO events (
    end_ms,
    icalendar_id,
    latitude,
+   location_url,
    longitude,
    price_cents,
    price_stripe_id,
@@ -25,6 +26,7 @@ INSERT INTO events (
   1771642800000, -- 2026-02-26T22:00:00-05:00
   '889a513b-773b-418a-8b1e-932a35ade654',
   43.3715053,
+  'https://maps.app.goo.gl/eV9kxEKNrnEFNpeD9',
   -72.3385251592626,
   0,
   NULL,
