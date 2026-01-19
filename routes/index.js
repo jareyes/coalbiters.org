@@ -1,16 +1,29 @@
 const {Router} = require("express");
 const carts = require("./carts");
+const Event = require("../lib/model/event");
 const events = require("./events");
+const middleware = require("../lib/middleware");
 const tickets = require("./tickets");
 
-const router = new Router();
-router.get("/", (req, res) => res.render("index", {layout: false}));
-router.get("/book-club", (req, res) => res.render("book-club", {layout: false}));
-router.get("/about", (req, res) => res.render("about"));
-router.get("/events", (req, res) => res.render("events"));
+function home_page(req, res, next, sqlite) {
+    try {
+        const event = Event.get_by_slug(
+            sqlite,
+            "2026-02-20-silent-disco",
+        );
+        res.render("index_template", {event});
+    }
+    catch(err) {
+        next(err);
+    }
+}
 
-router.use(carts.MOUNT, carts);
-router.use(events.MOUNT, events);
-router.use(tickets.MOUNT, tickets);
+function create(sqlite) {
+    const router = new Router();
+    router.get("/", middleware.supply(home_page, sqlite));
+    router.use(events.MOUNT, events.create(sqlite));
+    router.use(tickets.MOUNT, tickets.create(sqlite));
+    return router;
+}
 
-module.exports = router;
+module.exports = create;

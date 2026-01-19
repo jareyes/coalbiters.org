@@ -2,14 +2,14 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//coalbiters.org//ical//EN
 BEGIN:VEVENT
-UID:{{ calendar_uuid }}
+UID:{{ event.icalendar_id }}
 SEQUENCE:0
-DTSTAMP:{{ ical_date modtime }}
-DTSTART:{{ ical_date start_time }}
-DTEND:{{ ical_date end_time }}
-SUMMARY:Claremont Coalbiters {{{ title }}}
-LOCATION:"{{{venue}}}, {{{ venue_address }}}"
-DESCRIPTION:"{{{ directions }}}"
-URL;VALUE=URI:https://coalbiters.com/event/{{ slug }}
+DTSTAMP:{{ ical_date event.updated_at }}
+DTSTART:{{ ical_date event.start }}
+DTEND:{{ ical_date event.end }}
+SUMMARY:Claremont Coalbiters {{{ event.title }}}
+LOCATION:"{{{ event.venue_name }}}, {{{ event.venue_address }}}"
+DESCRIPTION:"{{{ event.directions }}}"
+URL;VALUE=URI:https://coalbiters.com/event/{{ event.slug }}
 END:VEVENT
 END:VCALENDAR

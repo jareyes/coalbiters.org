@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS events (
+   event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+   created_ms INTEGER DEFAULT (strftime('%s', 'now') * 1000),
+   description TEXT,
+   directions TEXT,
+   end_ms INTEGER NOT NULL,
+   icalendar_id TEXT NOT NULL,
+   latitude REAL,
+   location_url TEXT,
+   longitude REAL,
+   price_cents INTEGER NOT NULL,
+   price_stripe_id TEXT,
+   slug TEXT NOT NULL,
+   start_ms INTEGER NOT NULL,
+   subtitle TEXT,
+   timezone TEXT DEFAULT "America/New_York",
+   title TEXT NOT NULL,
+   updated_ms INTEGER,
+   venue_address TEXT,
+   venue_name TEXT,
+   venue_url TEXT,
+   UNIQUE(slug)
+);

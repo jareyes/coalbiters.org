@@ -12,8 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/reset.css" />
-    <link rel="stylesheet" href="/css/style.css" />
-
+    <link rel="stylesheet" href="/css/coalbiters.css" />
     <title>Coalbiters Club{{#if @root.title}} | {{ @root.title }}{{/if}}</title>
     {{#if style}}
     <style>
@@ -24,17 +23,22 @@
   </head>
   <body>
     <header>
-      <h1>{{#unless hide_home}}<a href="/">Claremont Coalbiters</a>{{/unless}}</h1>
-      <nav>
+      <nav id="nav">
+        <!--
         <ul>
           <li><a href="/events">Events</a></li>
           <li><a href="/about">About Coalbiters</a></li>
-        </ul>
+        </ul> -->
       </nav>
     </header>
     <article>
-      {{{ body }}}
+      <div id="main">
+        {{{ body }}}
+      </div>
     </article>
-    <footer>&copy;2024 Claremont Coalbiters Club</footer>
+    <footer>
+      <p id="footer">&copy;2026 Claremont Coalbiters Club
+      </p>
+    </footer>
   </body>
 </html>

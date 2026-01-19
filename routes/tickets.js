@@ -1,6 +1,7 @@
 const config = require("config");
 const email = require("../lib/email");
 const Event = require("../lib/model/event");
+const middleware = require("../lib/middleware");
 const QRCode = require("qrcode");
 const receipt = require("../lib/receipt");
 const {Router} = require("express");
@@ -55,44 +56,68 @@ function format_event_time(start_date, end_date) {
 }
 
 function validate_ticket(req, res, next) {
-  const {confirmation_code} = req.params;
-  const {token: validation_token} = req.query;
-  const is_valid = Ticket.is_valid(confirmation_code, validation_token);
-  if(is_valid) { return next(); }
-  res.sendStatus(400).end();
-}
-
-async function view_ticket_pdf(req, res, next) {
-  try {
     const {confirmation_code} = req.params;
-    const ticket = await Ticket.get_by_confirmation_code(confirmation_code);
-    const event = await Event.get_by_id(ticket.event_id);
-    const user = await User.get_by_id(ticket.user_id);
-    const buf = await receipt.write_pdf(ticket, event, user);
-
-    res.setHeader("Content-Length", buf.length);
-    res.setHeader("Content-Type", "application/pdf");
-      const filename = `${event.slug}-ticket-${confirmation_code.toLowerCase()}.pdf`;
-    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
-    res.send(buf);
-  }
-  catch(err) {
-    next(err);
-  }
+    const {token: validation_token} = req.query;
+    const is_valid = Ticket.is_valid(
+        confirmation_code,
+        validation_token,
+    );
+    if(is_valid) {
+        return next();
+    }
+    res.sendStatus(400).end();
 }
 
-async function view_ticket(req, res, next) {
+async function view_ticket_pdf(req, res, next, sqlite) {
     try {
         const {confirmation_code} = req.params;
-        const ticket = await Ticket.get_by_confirmation_code(confirmation_code);
-        const event = await Event.get_by_id(ticket.event_id);
-        const user = await User.get_by_id(ticket.user_id);
+        const ticket = Ticket.get_by_confirmation_code(
+            sqlite,
+            confirmation_code
+        );
+        const {
+            event_id,
+            user_id,
+        } = ticket;
+        const event = await Event.get_by_id(sqlite, event_id);
+        const user = await User.get_by_id(sqlite, user_id);
+        const buf = await receipt.write_pdf(
+            ticket,
+            event,
+            user,
+        );
 
-        const qrcode_data_url = await QRCode.toDataURL(ticket.checkin_url, QRCODE_OPTS);
-        const amount_paid_usd = DOLLAR_FORMAT.format(event.price * ticket.quantity / 100);
+        res.setHeader("Content-Length", buf.length);
+        res.setHeader("Content-Type", "application/pdf");
+        const filename = `${event.slug}-ticket-${confirmation_code.toLowerCase()}.pdf`;
+        res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+        res.send(buf);
+    }
+    catch(err) {
+        next(err);
+    }
+}
+
+async function view_ticket(req, res, next, sqlite) {
+    try {
+        const {confirmation_code} = req.params;
+        const ticket = Ticket.get_by_confirmation_code(
+            sqlite,
+            confirmation_code
+        );
+        const event = Event.get_by_id(sqlite, ticket.event_id);
+        const user = User.get_by_id(sqlite, ticket.user_id);
+
+        const ticket_url = Ticket.get_url(ticket.confirmation_code);
+        const qrcode_data_url = await QRCode.toDataURL(
+            ticket_url,
+            QRCODE_OPTS,
+        );
+        const amount_paid_usd = DOLLAR_FORMAT.format(event.price_cents * ticket.quantity / 100);
         const date_paid = format_date_paid(ticket.date_paid);
-        const unit_price_usd = DOLLAR_FORMAT.format(event.price / 100);
-        const event_datetime = format_event_time(event.start_time, event.end_time);
+        const unit_price_usd = DOLLAR_FORMAT.format(event.price_cents / 100);
+        const event_datetime = format_event_time(event.start, event.end);
+        const ticket_pdf_url = Ticket.get_pdf_url(ticket.confirmation_code);
         res.render("tickets/ticket-detail", {
             layout: false,
             ticket,
@@ -103,7 +128,7 @@ async function view_ticket(req, res, next) {
             date_paid,
             qrcode_data_url,
             unit_price_usd,
-            ticket_pdf_url: ticket.pdf_url,
+            ticket_pdf_url,
         });
     }
     catch(err) {
@@ -163,18 +188,24 @@ async function checkin_ticket(req, res, next) {
   }
 }
 
-const router = new Router();
-router.get("/check-in/:confirmation_code([A-Z]{5}\\d{1,2})", checkin_ticket);
-router.get(
-    "/:confirmation_code([A-Z]{5}\\d{1,2})",
-    validate_ticket,
-    view_ticket,
-);
-router.get(
-  "/:confirmation_code([A-Z]{5}\\d{1,2}).pdf",
-  validate_ticket,
-  view_ticket_pdf,
-);
+function create(sqlite) {
+    const router = new Router();
+    router.get(
+        "/check-in/:confirmation_code([A-Z]{5}\\d{1,2})",
+        checkin_ticket,
+    );
+    router.get(
+        "/:confirmation_code([A-Z]{5}\\d{1,2})",
+        validate_ticket,
+        middleware.supply(view_ticket, sqlite),
+    );
+    router.get(
+        "/:confirmation_code([A-Z]{5}\\d{1,2}).pdf",
+        validate_ticket,
+        middleware.supply(view_ticket_pdf, sqlite),
+    );
+    return router;
+}
 
-router.MOUNT = MOUNT;
-module.exports = router;
+exports.MOUNT = MOUNT;
+exports.create = create;
