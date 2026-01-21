@@ -1,0 +1,11 @@
+var/events/20250131-silent-disco filter=lfs diff=lfs merge=lfs -text
+var/events/20250328-silent-disco filter=lfs diff=lfs merge=lfs -text
+var/events/20250731-book-club filter=lfs diff=lfs merge=lfs -text
+var/events/bookclub.webp filter=lfs diff=lfs merge=lfs -text
+var/events/20240629-claremont-pride filter=lfs diff=lfs merge=lfs -text
+var/events/20250228-silent-disco filter=lfs diff=lfs merge=lfs -text
+var/events/20250725-silent-disco filter=lfs diff=lfs merge=lfs -text
+var/events/contract.txt filter=lfs diff=lfs merge=lfs -text
+var/events/silent-disco-setup.tex filter=lfs diff=lfs merge=lfs -text
+var/events/silent-disco-setup.tex~ filter=lfs diff=lfs merge=lfs -text
+var/events/** filter=lfs diff=lfs merge=lfs -text
