@@ -21,6 +21,7 @@ function home_page(req, res, next, sqlite) {
 function create(sqlite) {
     const router = new Router();
     router.get("/", middleware.supply(home_page, sqlite));
+    router.get("/about", (req, res) => res.render("about"));
     router.use(events.MOUNT, events.create(sqlite));
     router.use(tickets.MOUNT, tickets.create(sqlite));
     return router;
