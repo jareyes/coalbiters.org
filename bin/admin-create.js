@@ -7,10 +7,27 @@ const User = require("../lib/model/user");
 const SQLITE_FILEPATH = config.get("sqlite.filepath");
 
 async function create_user(sqlite, email, password) {
-    const password_hash = await User.hash_password(password);
-    User.create(sqlite, {
+    // Create user
+    const password_hash = await User.hash_password(
+        password,
+    );
+    const user = User.create(sqlite, {
         email,
         password_hash,
+    });
+    const {user_id} = user;
+
+    // Add admin privileges
+    const {group_id} = sqlite.prepare(
+        "SELECT group_id FROM groups WHERE name='admin'",
+    ).get();
+
+    sqlite.prepare(
+        `INSERT INTO permissions (group_id, user_id)
+         VALUES (:group_id, :user_id)`,
+    ).run({
+        group_id,
+        user_id,
     });
 }
 
