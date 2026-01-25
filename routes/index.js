@@ -1,4 +1,5 @@
 const {Router} = require("express");
+const admin = require("./admin");
 const carts = require("./carts");
 const Event = require("../lib/model/event");
 const events = require("./events");
@@ -22,6 +23,7 @@ function create(sqlite) {
     const router = new Router();
     router.get("/", middleware.supply(home_page, sqlite));
     router.get("/about", (req, res) => res.render("about"));
+    router.use(admin.MOUNT, admin.create(sqlite));
     router.use(events.MOUNT, events.create(sqlite));
     router.use(tickets.MOUNT, tickets.create(sqlite));
     return router;

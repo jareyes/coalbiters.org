@@ -1,6 +1,8 @@
 {
   app: {
-    port: 4000
+    port: 4000,
+    salt: "big-password-salt",
+    session_secret: "session-secret",
   },
   log: {
     level: "info",
@@ -31,9 +33,10 @@
     protocol: "https",
     host: "coalbiters.org",
     mount: {
-      tickets: "/ticket",
+      admin: "/grayskull",
       carts: "/cart",
       events: "/event",
+      tickets: "/ticket",
     },
   },
   sqlite: {
