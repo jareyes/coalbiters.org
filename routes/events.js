@@ -6,6 +6,7 @@ const helpers = require("../lib/helpers");
 const middleware = require("../lib/middleware");
 const template = require("../lib/template");
 const Receipt = require("../lib/receipt");
+const spam_domains = require("../var/spam_domains.json");
 const Ticket = require("../lib/model/ticket");
 const User = require("../lib/model/user");
 
@@ -51,6 +52,11 @@ async function register(req, res, next, sqlite) {
         const event_id = form.event_id;
         const quantity = form.ticket_count;
 
+        const domain = email.split("@")[1];
+        if(spam_domains.includes(domain)) {
+            return res.redirect("/");
+        }
+        
         let user = User.get_by_email(sqlite, email);
         if(user === null) {
             user = User.create(sqlite, {email});
