@@ -9,7 +9,29 @@ const Receipt = require("../lib/receipt");
 const Ticket = require("../lib/model/ticket");
 const User = require("../lib/model/user");
 
-const MOUNT = config.get("routes.mount.events");
+function calendar(req, res, next, sqlite) {
+    try {
+        const days = [];
+        const now = new Date();
+        const last_sunday = new Date();
+        last_sunday.setDate(now.getDate() - now.getDay());
+        for(
+            let i = 0, date = last_sunday;
+            i < 7;
+            i++, date.setDate(date.getDate() + 1)
+        ) {
+            days.push(new Date(date));
+        }
+        const context = {
+            days,
+            timezone: "UTC",
+        };
+        res.render("events/events-calendar", context);
+    }
+    catch(err) {
+        next(err);
+    }
+}
 
 function detail(req, res, next, sqlite) {
     try {
@@ -25,7 +47,6 @@ function detail(req, res, next, sqlite) {
 async function register(req, res, next, sqlite) {
     try {
         const form = req.body;
-        console.log("form", form);
         const email = form.email_address;
         const event_id = form.event_id;
         const quantity = form.ticket_count;
@@ -65,6 +86,10 @@ async function register(req, res, next, sqlite) {
 function create(sqlite) {
     const router = new Router();
     router.get(
+        "/calendar",
+        middleware.supply(calendar, sqlite)
+    );
+    router.get(
         "/:slug",
         middleware.supply(detail, sqlite)
     ),
@@ -75,5 +100,4 @@ function create(sqlite) {
     return router;
 }
 
-exports.MOUNT = MOUNT;
 exports.create = create;

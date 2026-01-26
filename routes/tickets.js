@@ -9,7 +9,6 @@ const template = require("../lib/template");
 const Ticket = require("../lib/model/ticket");
 const User = require("../lib/model/user");
 
-const MOUNT = config.get("routes.mount.tickets");
 const DATE_PAID_FORMAT = new Intl.DateTimeFormat(
   "en-US",
   {
@@ -207,5 +206,4 @@ function create(sqlite) {
     return router;
 }
 
-exports.MOUNT = MOUNT;
 exports.create = create;

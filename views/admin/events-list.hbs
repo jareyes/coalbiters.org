@@ -1,0 +1,29 @@
+{{#block "style"}}
+article {
+    align-items: flex-start;
+}
+#main {
+    width: 100%;
+}
+h1 {
+    font-size: 0.9rem;
+    font-variant: small-caps;
+    padding-bottom: 0.25rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--cb-color-black);
+}
+.event-title {
+    font-weight: 500;
+}
+{{/block}}
+<h1>Events</h1>
+<a href="{{ mounts.admin }}/event/create">Add new</a>
+<ol>
+  {{#each events}}
+  <li>
+    <span class="event-title">{{ title }}</span>
+    <a href="{{ ../mounts.admin }}/event/{{ event_id }}">Edit</a>
+    <a href="{{ ../mounts.events }}/{{ slug }}">View</a>
+  </li>
+  {{/each}}
+</ol>

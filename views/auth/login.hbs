@@ -1,0 +1,18 @@
+{{#block "style"}}
+input {
+    display: block;
+}
+{{/block}}
+<h1>Login</h1>
+
+{{#if form_error }}
+<div class="form-error">
+  {{ form_error }}
+</div>
+{{/if}}
+
+<form method="post" action="{{ MOUNTS.auth }}/login">
+  <input type="email" name="email" value="{{ email }}">
+  <input type="password" name="password" value="{{ password }}">
+  <button type="submit">Login</button>
+</form>
