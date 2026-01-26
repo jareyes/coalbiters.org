@@ -11,7 +11,7 @@
     --cb-padding-top: 1rem;
 }
 article {
-    align-items: center;
+    align-items: flex-start;
     display: flex;
     flex-grow: 1;
     justify-content: center;
@@ -60,6 +60,7 @@ section {
 #main {
     max-width: 400px;
     padding: var(--cb-padding);
+    width: 100%;
 }
 #nav {
     padding: var(--cb-padding);

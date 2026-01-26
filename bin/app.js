@@ -5,6 +5,7 @@ const bunyan = require("express-bunyan-logger");
 const config = require("config");
 const database = require("../lib/database");
 const express = require("express");
+const Event = require("../lib/model/event");
 const path = require("node:path");
 const process = require("node:process");
 const routes = require("../routes");
@@ -36,6 +37,24 @@ function create(sqlite) {
             maxAge: MS_PER_WEEK,
         },
     }));
+    // Make event count accessible to all templates
+    app.use((req, res, next) => {
+        try {
+            const count = Event.count_all(sqlite);
+            app.locals.event_count = count;
+        }
+        catch(err) {
+            // Do not fail on middleware failure
+            console.error({
+                event: "App.EVENT_COUNT",
+                name: err.name,
+                message: err.message,
+                stack: err.stack,
+            });
+        }
+        next();
+    });
+
     // app.use(bunyan());
     // app.use(bunyan.errorLogger());
     app.use(express.static("static"));

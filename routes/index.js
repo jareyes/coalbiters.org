@@ -23,10 +23,21 @@ function home_page(req, res, next, sqlite) {
     }
 }
 
+function upcoming_events(req, res, next, sqlite) {
+    try {
+        const events = Event.get_all(sqlite);
+        res.render("events", {events});
+    }
+    catch(err) {
+        next(err);
+    }
+}
+
 function create(sqlite) {
     const router = new Router();
     router.get("/", middleware.supply(home_page, sqlite));
     router.get("/about", (req, res) => res.render("about"));
+    router.get("/events", middleware.supply(upcoming_events, sqlite));
     router.use(MOUNTS.admin, admin.create(sqlite));
     router.use(MOUNTS.auth, auth.create(sqlite));
     router.use(MOUNTS.events, events.create(sqlite));
