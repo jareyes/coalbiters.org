@@ -13,4 +13,5 @@ async function create_sqlite() {
 suite("/lib/model/user.js", () => {
     test.todo("Can save a user");
     test.todo("Can get a user by email");
+    test.todo("Can ban a user");
 });

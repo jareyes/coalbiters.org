@@ -49,20 +49,37 @@ async function register(req, res, next, sqlite) {
     try {
         const form = req.body;
         const email = form.email_address;
-        const event_id = form.event_id;
-        const quantity = form.ticket_count;
-
+        // Skip known spammers
         const domain = email.split("@")[1];
         if(spam_domains.includes(domain)) {
             return res.redirect("/");
         }
-        
+
+        // Check the honey pot for flies
+        const honeypot_first_name = form.first_name;
+        const honeypot_last_name = form.last_name;
+        if(
+            honeypot_first_name?.length > 0 ||
+            honeypot_last_name?.length > 0
+        ) {
+            User.ban(sqlite, email);
+            return res.redirect("/");
+        }
+
+        // But check if this is a repeat bad-actor
         let user = User.get_by_email(sqlite, email);
+        if(user.is_banned) {
+            return res.redirect("/");
+        }
+
+        // Proceed as normal
         if(user === null) {
             user = User.create(sqlite, {email});
         }
-        const confirmation_code = Ticket.generate_confirmation();
+        const event_id = form.event_id;
+        const quantity = form.ticket_count;
         const user_id = user.user_id;
+        const confirmation_code = Ticket.generate_confirmation();
         const ticket = Ticket.create(sqlite, {
             user_id,
             event_id,

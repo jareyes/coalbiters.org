@@ -79,6 +79,12 @@
     text-transform: uppercase;
     font-size: 0.8rem;
 }
+#ticket-first-name {
+    display: none;
+}
+#ticket-last-name {
+    display: none;
+}
 #ticket-selector {
     margin-top: 0.25rem;
     border-left: 2px solid black;
@@ -157,6 +163,8 @@
     </span>
   </div>
   <input type="hidden" name="event_id" value="{{ event.event_id }}">
+  <input id="ticket-first-name" name="first_name" type="text" placeholder="First Name">
+  <input id="ticket-last-name" name="last_name" type="text" placeholder="Last Name">
   <input id="ticket-email" type="email" name="email_address" required placeholder="your@email.com">
   <div id="ticket-selector">
     <input id="ticket-count-input" inputmode="numeric" type="number" min="1" name="ticket_count" value="1" title="Ticket count">
