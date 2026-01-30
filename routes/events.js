@@ -68,7 +68,7 @@ async function register(req, res, next, sqlite) {
 
         // But check if this is a repeat bad-actor
         let user = User.get_by_email(sqlite, email);
-        if(user.is_banned) {
+        if(user?.is_banned) {
             return res.redirect("/");
         }
 
