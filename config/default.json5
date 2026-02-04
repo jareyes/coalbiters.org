@@ -3,6 +3,7 @@
     port: 4000,
     salt: "big-password-salt",
     session_secret: "session-secret",
+    email_enabled: false,
   },
   log: {
     level: "info",

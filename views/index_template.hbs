@@ -163,6 +163,7 @@
     </span>
   </div>
   <input type="hidden" name="event_id" value="{{ event.event_id }}">
+  <input id="form-time" type="hidden" name="time_ms">
   <input id="ticket-first-name" name="first_name" type="text" placeholder="First Name">
   <input id="ticket-last-name" name="last_name" type="text" placeholder="Last Name">
   <input id="ticket-email" type="email" name="email_address" required placeholder="your@email.com">
@@ -197,7 +198,16 @@
     <div id="map"></div>
   </div><!-- end location -->
 </section>
-  
+<script type="module">
+  const start_ms = Date.now();
+  function add_timing(event) {
+      const time_ms = Date.now() - start_ms;
+      const time_input = document.getElementById("form-time")
+      time_input.value = time_ms;
+  }
+  const form = document.getElementById("form-ticket");
+  form.addEventListener("submit", add_timing);
+</script>
 <script type="module">
   function decrement() {
       const $ticket_input = document.querySelector("#ticket-count-input");
@@ -225,6 +235,9 @@
   const $increment_button = document.querySelector("#ticket-increment-button");
   $decrement_button.addEventListener("click", decrement);
   $increment_button.addEventListener("click", increment);
+</script>
+<script type="module">
+  // TODO: Send amount of time on page to backend
 </script>
 <script type="module">
   const coordinates = ol.proj.fromLonLat([

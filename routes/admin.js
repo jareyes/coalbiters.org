@@ -3,6 +3,7 @@ const Event = require("../lib/model/event");
 const {Router} = require("express");
 const middleware = require("../lib/middleware");
 const path = require("node:path");
+const User = require("../lib/model/user");
 
 const MOUNTS = config.get("routes.mount");
 
@@ -74,6 +75,21 @@ function list_events(req, res, next, sqlite) {
     }
 }
 
+function list_users(req, res, next, sqlite) {
+    try {
+        const users = User.list(sqlite);
+        const context = {users};
+        res.render("admin/users-list", context);
+    }
+    catch(err) {
+        next(err);
+    }
+}
+
+function ban_users(req, res, next, sqlite) {
+    
+}
+
 function create(sqlite) {
     const router = new Router();
     router.use(
@@ -84,17 +100,21 @@ function create(sqlite) {
         middleware.supply(list_events, sqlite),
     );
     router.get(
-        "/event/create",
+        "/events/create",
         middleware.supply(read_event, sqlite),
     );
     router.post(
-        "/event/save",
+        "/events/save",
         middleware.supply(edit_event, sqlite),
     );
     router.get(
         "/event/:event_id",
         middleware.supply(read_event, sqlite),
-    );    
+    );
+    router.get(
+        "/users",
+        middleware.supply(list_users, sqlite),
+    );
     return router;
 }
 

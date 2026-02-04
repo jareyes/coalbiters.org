@@ -1,0 +1,27 @@
+<h1>Users</h1>
+
+<p>User Count: {{ users.length }}</p>
+
+<form>
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Email</th>
+        <th>Joined</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+      </tr>      
+    </thead>
+    <tbody>
+      {{#each users}}
+        <tr>
+          <td>{{ email }}</td>
+          <td>{{ humanized_date created_at }}</td>
+          <td>{{ first_name }}</td>
+          <td>{{ last_name }}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</form>

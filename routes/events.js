@@ -10,6 +10,8 @@ const spam_domains = require("../var/spam_domains.json");
 const Ticket = require("../lib/model/ticket");
 const User = require("../lib/model/user");
 
+const FILLOUT_MS = 3000;
+
 function calendar(req, res, next, sqlite) {
     try {
         const days = [];
@@ -58,7 +60,16 @@ async function register(req, res, next, sqlite) {
         // Check the honey pot for flies
         const honeypot_first_name = form.first_name;
         const honeypot_last_name = form.last_name;
+        const time_ms = parseInt(form.time_ms);
+        console.log({
+            event: "Events.HONEYPOT",
+            first_name: honeypot_first_name,
+            last_name: honeypot_last_name,
+            email,
+            form_ms: time_ms,
+        });
         if(
+            time_ms < FILLOUT_MS ||
             honeypot_first_name?.length > 0 ||
             honeypot_last_name?.length > 0
         ) {

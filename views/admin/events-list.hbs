@@ -17,12 +17,12 @@ h1 {
 }
 {{/block}}
 <h1>Events</h1>
-<a href="{{ mounts.admin }}/event/create">Add new</a>
+<a href="{{ mounts.admin }}/events/create">Add new</a>
 <ol>
   {{#each events}}
   <li>
     <span class="event-title">{{ title }}</span>
-    <a href="{{ ../mounts.admin }}/event/{{ event_id }}">Edit</a>
+    <a href="{{ ../mounts.admin }}/events/{{ event_id }}">Edit</a>
     <a href="{{ ../mounts.events }}/{{ slug }}">View</a>
   </li>
   {{/each}}
