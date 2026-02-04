@@ -11,8 +11,9 @@ input {
 </div>
 {{/if}}
 
-<form method="post" action="{{ MOUNTS.auth }}/login">
+<form method="post" action="{{ mounts.auth }}/login">
   <input type="email" name="email" value="{{ email }}">
   <input type="password" name="password" value="{{ password }}">
+  <input type="hidden" name="redirect_url" value="{{ redirect_url }}">
   <button type="submit">Login</button>
 </form>

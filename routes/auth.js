@@ -7,17 +7,18 @@ const MOUNTS = config.get("routes.mount");
 
 async function login(req, res, next, sqlite) {
     try {
-        console.log("here");
-        const {redirect_url} = req.query;
-        const {email, password} = req.body;
+        const {email, password, redirect_url} = req.body;
+        console.log({
+            event: "Auth.ATTEMPT",
+            email,
+        });
         const user = User.get_by_email(sqlite, email);
         const context = {
             MOUNTS,
             email,
             password,
         };
-        console.log("user", user);
-        if(user === null) {
+        if(user === null) {            
             context.form_error = "Invalid login credentials";
             return res.render(
                 "auth/login",
@@ -42,16 +43,39 @@ async function login(req, res, next, sqlite) {
     }
 }
 
+function login_prompt(req, res, next) {
+    try {
+        const {
+            redirect_url="/",
+        } = req.query;
+        const context = {redirect_url};
+        res.render("auth/login", context);
+    }
+    catch(err) {
+        next(err);
+    }
+}
+
+function logout(req, res, next) {
+    try {
+        if(req.session !== undefined) {
+            req.session.user = undefined;
+        }
+        next();
+    }
+    catch(err) {
+        next(err);
+    }
+}
+
 function create(sqlite) {
     const router = new Router();
-    router.get(
-        "/login",
-        (req, res) => res.render("auth/login", {MOUNTS}),
-    );
+    router.get("/login", login_prompt);
     router.post(
         "/login",
         middleware.supply(login, sqlite),
     );
+    router.get("/logout", logout);
     return router;
 }
 
